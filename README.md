@@ -71,6 +71,7 @@ Polybar icon fonts (MaterialIcons, Feather) are bundled in `polybar/fonts/`:
 mkdir -p ~/.local/share/fonts
 cp -r polybar/fonts/* ~/.local/share/fonts/
 fc-cache -fv
+touch ~/font.rasinc
 ```
 
 ### Automated Install
