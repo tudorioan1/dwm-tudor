@@ -76,7 +76,7 @@ touch ~/font.rasinc
 
 ### Automated Install
 ```bash
-git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./install-arch.sh && ./install-arch.sh
+git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./install-arch.sh && ./install-arch.sh && touch ~/font.rasinc
 ```
 
 ### Post-Install Setup
