@@ -7,8 +7,12 @@
 </div>
 
 ---
+! Note !
+This project is still in beta, so expect some minor bugs.
 
-This is a **heavily modified** version of dwm based on the original [suckless.org](https://dwm.suckless.org/) dwm. It includes numerous patches and customizations for a productive, user-friendly desktop on Arch Linux with Xorg.
+This is a fork of CTT's version of dwm modified for my needs. It includes numerous patches and customizations for a productive, user-friendly desktop on Arch Linux with X11.
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/7a9d0545-48f7-4b29-aa4b-be7e093afb93" />
+
 
 ### Patches & Features
 
@@ -24,25 +28,7 @@ This is a **heavily modified** version of dwm based on the original [suckless.or
 - **Cursor warp** — cursor follows focus across windows/monitors
 - **Noborder** — auto-remove borders when only one window is visible
 - **Multi-monitor** — Xinerama support with per-monitor Polybar bars
-
----
-
-## 📋 Install
-
-### Quick Install (Recommended)
-
-Use [Linutil](https://christitus.com/linux) for automated setup:
-
-```bash
-curl -fsSL https://christitus.com/linux | sh
-```
-
-<img width="1839" height="1000" alt="image" src="https://github.com/user-attachments/assets/314f9a40-4ccb-4c34-b3d2-dcfee63c278b" />
-
-Select `dwm`, `rofi`, `bash prompt`, and `ghostty` using the `v` key, then press `Enter`.
-
-### Manual Install
-
+Installation steps:
 #### 1. Install Dependencies
 
 **Build dependencies** (required to compile):
@@ -77,8 +63,6 @@ sudo pacman -S polybar
 git clone https://github.com/ChrisTitusTech/dwm-titus.git
 cd dwm-titus
 cp config.def.h config.h    # Create your personal config
-make
-sudo make install
 ```
 
 #### 3. Install Fonts
@@ -90,9 +74,7 @@ cp -r polybar/fonts/* ~/.local/share/fonts/
 fc-cache -fv
 ```
 
-#### Automated Installer
-
-An install script is provided that handles all of the above:
+### 4. Run the script
 ```bash
 ./install.sh
 ```
@@ -116,14 +98,12 @@ The `.xinitrc` disables screen blanking/DPMS (prevents NVIDIA GPU issues on wake
 
 Press <kbd>SUPER</kbd> + <kbd>/</kbd> inside dwm for an **interactive keybind viewer** (via rofi).
 
-See [docs/src/keybinds.md](docs/src/keybinds.md) for the full reference.
-
 ### Essential Keybinds
 
 | Keybind | Action |
 |---------|--------|
 | <kbd>SUPER</kbd> + <kbd>X</kbd> | Open terminal |
-| <kbd>SUPER</kbd> + <kbd>R</kbd> | Launch rofi (app launcher) |
+| <kbd>SUPER</kbd> + <kbd>R</kbd> | Launch rofi  |
 | <kbd>SUPER</kbd> + <kbd>Q</kbd> | Close window |
 | <kbd>SUPER</kbd> + <kbd>J</kbd> / <kbd>K</kbd> | Focus next / previous window |
 | <kbd>SUPER</kbd> + <kbd>H</kbd> / <kbd>L</kbd> | Resize master area |
@@ -160,50 +140,9 @@ Key things to customize in `config.h`:
 
 ---
 
-## 🔍 Troubleshooting
 
-**Black screen / dwm doesn't start:**
-- Verify Xorg is installed: `pacman -Q xorg-server xorg-xinit`
-- Check `.xinitrc` exists and ends with `exec dwm`
-- Try `startx` from a TTY to see error output
-
-**No status bar / Polybar missing:**
-- Install polybar: `sudo pacman -S polybar`
-- Check fonts are installed: `fc-list | grep -i meslo`
-- Verify polybar config: `ls ~/.config/polybar/`
-
-**Missing icons in Polybar:**
-- Install icon fonts: `cp -r polybar/fonts/* ~/.local/share/fonts/ && fc-cache -fv`
-
-**Terminal doesn't open (SUPER+X):**
-- Install a terminal emulator (ghostty, alacritty, kitty, or st)
-- Or edit `config.h` → `termcmd[]` to use your preferred terminal
-
-**Multi-monitor issues:**
-- Polybar auto-detects monitors via `xrandr`
-- Primary monitor gets systray + EWMH tags; secondary monitors get a simpler bar
-- If tags don't switch correctly across monitors, check `debug_ewmh.sh`
-
-**Dependency check:**
-```bash
-bash scripts/check-deps.sh
 ```
 
 ---
 
-## 📁 Project Structure
 
-| Path | Purpose |
-|------|---------|
-| `config.def.h` | Default configuration template |
-| `config.h` | Your personal configuration (edit this) |
-| `dwm.c` | Main window manager source |
-| `Makefile` | Build and install system |
-| `.xinitrc` | Startup script for `startx` |
-| `dwm.desktop` | Session entry for display managers |
-| `install.sh` | Automated installer (Arch Linux) |
-| `polybar/` | Polybar config, themes, and fonts |
-| `config/` | Terminal, rofi, and app configurations |
-| `scripts/` | Helper scripts (keybinds viewer, dep checker, etc.) |
-| `docs/src/keybinds.md` | Full keybinding reference |
-| `docs/ROADMAP.md` | Project roadmap and planned features |
