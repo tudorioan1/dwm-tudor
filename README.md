@@ -7,7 +7,7 @@ Keybindings:
 | --- | --- |
 | Open rofi | <kbd>Super</kbd> + <kbd>R</kbd> |
 | Open a terminal (ghostty) | <kbd>Super</kbd> + <kbd>X</kbd> |
-| Open dwm-titus Control Center | <kbd>Super</kbd> + <kbd>F1</kbd> |
+| Open dwm-tudor Control Center | <kbd>Super</kbd> + <kbd>F1</kbd> |
 | Show the interactive keybind viewer | <kbd>Super</kbd> + <kbd>/</kbd> |
 | Close the focused window | <kbd>Super</kbd> + <kbd>Q</kbd> |
 | Switch workspace | <kbd>Super</kbd> + <kbd>1-9</kbd> |
