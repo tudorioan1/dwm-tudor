@@ -60,9 +60,8 @@ sudo pacman -S polybar
 #### 2. Clone and Build
 
 ```bash
-git clone https://github.com/ChrisTitusTech/dwm-titus.git
-cd dwm-titus
-cp config.def.h config.h    # Create your personal config
+git clone https://github.com/tudorioan1/dwm-tudor.git
+cd dwm-tudor
 ```
 
 #### 3. Install Fonts
