@@ -28,7 +28,7 @@ This is a fork of CTT's version of dwm modified for my needs. It includes numero
 - **Cursor warp** — cursor follows focus across windows/monitors
 - **Noborder** — auto-remove borders when only one window is visible
 - **Multi-monitor** — Xinerama support with per-monitor Polybar bars
-Installation steps:
+  Manual installation:
 #### 1. Install Dependencies
 
 **Build dependencies** (required to compile):
@@ -75,7 +75,7 @@ touch ~/font.rasinc
 chmod +x ~/.config/dwm-tudor/scripts/autostart.sh 2>/dev/null || chmod +x ~/dwm/scripts/autostart.sh
 ```
 
-### Automated Install
+### Automated Install (recommended)
 ```bash
 git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./install-arch.sh && ./install-arch.sh && touch ~/font.rasinc && chmod +x ~/.config/dwm-tudor/scripts/autostart.sh 2>/dev/null || chmod +x ~/dwm/scripts/autostart.sh
 ```
