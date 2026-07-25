@@ -28,7 +28,7 @@ This is a fork of CTT's version of dwm modified for my needs. It includes numero
 - **Cursor warp** — cursor follows focus across windows/monitors
 - **Noborder** — auto-remove borders when only one window is visible
 - **Multi-monitor** — Xinerama support with per-monitor Polybar bars
-  Manual installation:
+ ### Manual installation:
 #### 1. Install Dependencies
 
 **Build dependencies** (required to compile):
