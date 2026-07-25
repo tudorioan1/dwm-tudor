@@ -62,6 +62,7 @@ sudo pacman -S polybar
 ```bash
 git clone https://github.com/tudorioan1/dwm-tudor.git
 cd dwm-tudor
+make && sudo make install
 ```
 
 #### 3. Install Fonts
