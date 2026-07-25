@@ -73,7 +73,7 @@ cp -r polybar/fonts/* ~/.local/share/fonts/
 fc-cache -fv
 ```
 
-### 4. Run the script
+### Automated Install : Run the script
 ```bash
 ./install-arch.sh
 ```
