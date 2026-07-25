@@ -73,9 +73,9 @@ cp -r polybar/fonts/* ~/.local/share/fonts/
 fc-cache -fv
 ```
 
-### Automated Install : Run the script
+### Automated Install
 ```bash
-./install-arch.sh
+git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./install-arch.sh && ./install-arch.sh
 ```
 
 ### Post-Install Setup
