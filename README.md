@@ -72,12 +72,11 @@ mkdir -p ~/.local/share/fonts
 cp -r polybar/fonts/* ~/.local/share/fonts/
 fc-cache -fv
 touch ~/font.rasinc
-chmod +x ~/.config/dwm-tudor/scripts/autostart.sh 2>/dev/null || chmod +x ~/dwm-tudor/scripts/autostart.sh
 ```
 
 ### Automated Install (recommended)
 ```bash
-git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./install-arch.sh && ./install-arch.sh && touch ~/font.rasinc && chmod +x ~/.config/dwm-tudor/scripts/autostart.sh 2>/dev/null || chmod +x ~/dwm-tudor/scripts/autostart.sh
+git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./install-arch.sh && ./install-arch.sh && touch ~/font.rasinc
 ```
 
 ### Post-Install Setup
