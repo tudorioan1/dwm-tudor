@@ -141,8 +141,3 @@ Key things to customize in `config.h`:
 ---
 
 
-```
-
----
-
-
