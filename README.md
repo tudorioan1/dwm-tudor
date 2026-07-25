@@ -76,7 +76,7 @@ fc-cache -fv
 
 ### 4. Run the script
 ```bash
-./install.sh
+./install-arch.sh
 ```
 
 ### Post-Install Setup
