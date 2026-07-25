@@ -51,7 +51,7 @@ install: all
 		[ -L "$$dst" ] && rm -f "$$dst"; \
 		cp -rfL --remove-destination "$$dir" "$$dst"; \
 	done
-ln -sf ${CFG_DIR}/polybar/themes/minimal/config.ini ${CFG_DIR}/polybar/config.ini
+	ln -sf ${CFG_DIR}/polybar/themes/minimal/config.ini ${CFG_DIR}/polybar/config.ini
 	@echo "==> Installing scripts to PATH..."
 	for f in scripts/*; do \
 		case "$$(basename $$f)" in autostart*) continue;; esac; \
