@@ -1,0 +1,28 @@
+* {
+    /* Fundaluri (Negru & Gri foarte închis) */
+    bg0: #121212;          /* Negru profund pentru fundalul principal */
+    bg1: #1e1e1e;          /* Gri închis pentru panouri secundare/border-uri */
+    
+    /* Fonturi (Alb & Gri dezactivat) */
+    fg0: #f0f0f0;          /* Alb curat pentru textul principal și activ */
+    fg1: #7a7a7a;          /* Gri mediu pentru textul secundar sau scurtături */
+
+    /* Culori de accent Monochrome (înlocuiesc culorile OneDark) */
+    red: #2a2a2a;          /* Gri foarte închis pentru elemente de avertizare discrete */
+    red-trans: #2a2a2a15;
+
+    green: #d0d0d0;        /* Gri deschis */
+    green-trans: #d0d0d015;
+
+    yellow: #8e8e8e;       /* Gri neutru */
+    yellow-trans: #8e8e8e15;
+
+    blue: #ffffff;         /* Alb pur pentru selecția activă (highlight) */
+    blue-trans: #ffffff15; /* Selecție transparentă */
+
+    purple: #e0e0e0;       /* Off-white */
+    purple-trans: #e0e0e015;
+
+    aqua: #a6a6a6;         /* Gri argintiu */
+    aqua-trans: #a6a6a615;
+}
