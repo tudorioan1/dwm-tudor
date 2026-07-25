@@ -91,7 +91,7 @@ startx
 ```
 
 The `.xinitrc` disables screen blanking/DPMS (prevents NVIDIA GPU issues on wake), launches Polybar, and starts dwm.
-
+For changing display resolution or refresh rate, use xrandr.
 ---
 
 ## ⌨️ Keybindings
