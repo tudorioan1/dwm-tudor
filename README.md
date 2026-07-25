@@ -116,9 +116,9 @@ Press <kbd>SUPER</kbd> + <kbd>/</kbd> inside dwm for an **interactive keybind vi
 | <kbd>SUPER</kbd> + <kbd>Space</kbd> | Toggle floating |
 | <kbd>SUPER</kbd> + <kbd>Shift</kbd> + <kbd>Q</kbd> | Quit dwm |
 | <kbd>SUPER</kbd> + <kbd>Ctrl</kbd> + <kbd>Q</kbd> | Power menu |
-
+| <kbd>SUPER</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> | Screenshot (Flameshot) |
 ---
-! Known issues : If flameshot is not working, enter the configuration menu by right-clicking on the flameshot icon in the system tray and enable legacy X11 screenshot method.
+! Known issues : If flameshot is not working, enter the configuration menu by right-clicking on the flameshot icon in the system tray (after opening it from rofi) and enable legacy X11 screenshot method.
 ## 🔧 Configuration
 
 dwm is configured by editing `config.h` and recompiling:
