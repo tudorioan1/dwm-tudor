@@ -43,7 +43,7 @@ sudo pacman -S --needed xorg-server xorg-xinit xorg-xrandr xorg-xsetroot xorg-xs
 
 **Runtime dependencies** (desktop experience):
 ```bash
-sudo pacman -S --needed rofi picom dunst feh flameshot dex mate-polkit alsa-utils noto-fonts-emoji ttf-meslo-nerd
+sudo pacman -S --needed rofi picom dunst feh flameshot dex mate-polkit alsa-utils noto-fonts-emoji ttf-meslo-nerd nwg-look
 ```
 
 **Terminal emulator** (at least one):
