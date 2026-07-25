@@ -57,10 +57,10 @@ install: all
 		install -Dm755 "$$f" ${DESTDIR}${PREFIX}/bin/$$(basename $$f); \
 	done
 	@echo "==> Seeding user config (skipping existing files)..."
-	mkdir -p ${CFG_DIR}/dwm-tudor
-	test -f ${CFG_DIR}/dwm-tudor/hotkeys.toml || install -Dm644 config/hotkeys.toml ${CFG_DIR}/dwm-tudor/hotkeys.toml
-	test -f ${CFG_DIR}/dwm-tudor/themes.toml  || install -Dm644 config/themes.toml  ${CFG_DIR}/dwm-tudor/themes.toml
-	test -f ${CFG_DIR}/dwm-tudor/window-rules.toml || install -Dm644 config/window-rules.toml ${CFG_DIR}/dwm-tudor/window-rules.toml
+	mkdir -p ${CFG_DIR}/dwm-titus
+	test -f ${CFG_DIR}/dwm-titus/hotkeys.toml || install -Dm644 config/hotkeys.toml ${CFG_DIR}/dwm-titus/hotkeys.toml
+	test -f ${CFG_DIR}/dwm-titus/themes.toml  || install -Dm644 config/themes.toml  ${CFG_DIR}/dwm-titus/themes.toml
+	test -f ${CFG_DIR}/dwm-titus/window-rules.toml || install -Dm644 config/window-rules.toml ${CFG_DIR}/dwm-titus/window-rules.toml
 	@echo "==> Fixing ownership and permissions..."
 	find ${DATA_DIR} -name '*.sh' -o -name '*.py' | xargs -r chmod +x
 	for dir in config/*/; do \
