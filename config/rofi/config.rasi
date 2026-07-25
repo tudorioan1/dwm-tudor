@@ -1,0 +1,64 @@
+/** Basic config file **/
+
+configuration {
+  show-icons: true;
+  icon-theme: "Papirus";
+  display-drun: "  ";
+  display-window: "﩯 ";
+  display-combi: "  ";
+}
+//@theme "themes/sidetab-monochrome.rasi"
+
+//@theme "themes/sidetab-monochrome.rasi"
+
+//@theme "themes/sidetab-monochrome.rasi"
+
+//@theme "themes/sidetab-monochrome.rasi"
+
+//@theme "themes/sidetab-monochrome.rasi"
+
+//@theme "themes/sidetab-monochrome.rasi"
+
+//@theme "themes/sidetab-monochrome.rasi"
+
+//@theme "themes/sidetab-monochrome.rasi"
+
+//@theme "themes/sidetab-monochrome.rasi"
+
+//@theme "themes/sidetab-monochrome.rasi"
+
+//@theme "themes/sidetab-monochrome.rasi"
+
+//@theme "themes/sidetab-monochrome.rasi"
+
+//@theme "themes/sidetab-monochrome.rasi"
+
+//@theme "themes/sidetab-monochrome.rasi"
+
+//@theme "themes/sidetab-monochrome.rasi"
+
+//@theme "themes/sidetab-monochrome.rasi"
+
+//@theme "themes/sidetab-monochrome.rasi"
+
+//@theme "themes/sidetab-monochrome.rasi"
+
+//@theme "themes/sidetab-monochrome.rasi"
+
+//@theme "themes/sidetab-monochrome.rasi"
+
+//@theme "themes/sidetab-monochrome.rasi"
+
+//@theme "themes/sidetab-monochrome.rasi"
+
+//@theme "themes/sidetab-monochrome.rasi"
+
+//@theme "themes/sidetab-monochrome.rasi"
+
+//@theme "themes/sidetab-monochrome.rasi"
+
+//@theme "themes/sidetab-monochrome.rasi"
+
+//@theme "themes/sidetab-monochrome.rasi"
+
+@theme "/home/tudor/.config/rofi/themes/theme.rasi"
