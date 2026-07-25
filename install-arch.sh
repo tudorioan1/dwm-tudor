@@ -16,7 +16,7 @@ BG_DIR="$HOME/Pictures/backgrounds"
 
 echo ""
 echo "╔═══════════════════════════════════════════╗"
-echo "║        dwm-titus Installer (Arch)         ║"
+echo "║        dwm-tudor Installer (Arch)         ║"
 echo "╚═══════════════════════════════════════════╝"
 echo ""
 info "Package manager: $PKG_CMD"
@@ -78,8 +78,8 @@ command -v xdg-user-dirs-update &>/dev/null && xdg-user-dirs-update
 
 mkdir -p "$HOME/Pictures"
 if [ ! -d "$BG_DIR" ]; then
-    info "Downloading Nord wallpapers..."
-    git clone https://github.com/ChrisTitusTech/nord-background.git "$BG_DIR" 2>/dev/null \
+    info "Downloading wallpapers..."
+    git clone https://github.com/tudorioan1/backgrounds.git "$BG_DIR" 2>/dev/null \
         && ok "Wallpapers downloaded to $BG_DIR" \
         || warn "Failed to download wallpapers. Add your own to $BG_DIR."
 else
