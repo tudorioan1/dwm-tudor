@@ -28,57 +28,14 @@ This is a fork of CTT's version of dwm modified for my needs. It includes numero
 - **Cursor warp** — cursor follows focus across windows/monitors
 - **Noborder** — auto-remove borders when only one window is visible
 - **Multi-monitor** — Xinerama support with per-monitor Polybar bars
- ### Manual installation:
-#### 1. Install Dependencies
 
-**Build dependencies** (required to compile):
-```bash
-sudo pacman -S --needed base-devel libx11 libxft libxinerama imlib2 libxcb xcb-util freetype2 fontconfig
-```
-
-**Xorg**:
-```bash
-sudo pacman -S --needed xorg-server xorg-xinit xorg-xrandr xorg-xsetroot xorg-xset
-```
-
-**Runtime dependencies** (desktop experience):
-```bash
-sudo pacman -S --needed rofi picom dunst feh flameshot dex mate-polkit alsa-utils noto-fonts-emoji ttf-meslo-nerd nwg-look
-```
-
-**Terminal emulator** (at least one):
-```bash
-# Pick one — ghostty is the default in config.h
-sudo pacman -S ghostty   # or: alacritty, kitty
-```
-
-**Polybar** (status bar):
-```bash
-sudo pacman -S polybar
-```
-
-#### 2. Clone and Build
-
-```bash
-git clone https://github.com/tudorioan1/dwm-tudor.git
-cd dwm-tudor
-cp config.def.h config.h # Making your own config file for dwm
-make && sudo make install
-```
-
-#### 3. Install Fonts
-
-Polybar icon fonts (MaterialIcons, Feather) are bundled in `polybar/fonts/`:
-```bash
-mkdir -p ~/.local/share/fonts
-cp -r polybar/fonts/* ~/.local/share/fonts/
-fc-cache -fv
-touch ~/font.rasinc
-```
-
-### Automated Install (recommended)
+### Installation
 ```bash
 git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./install-arch.sh && ./install-arch.sh && touch ~/font.rasinc
+```
+### Make your own config file for dwm
+```bash
+cp config.def.h config.h
 ```
 
 ### Post-Install Setup
