@@ -31,7 +31,7 @@ This is a fork of CTT's version of dwm modified for my needs. It includes numero
 
 ### Installation
 ```bash
-git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./install-arch.sh && ./install-arch.sh && touch ~/font.rasinc && sudo cp dwm-session /usr/local/bin/ && sudo chmod +x /usr/local/bin/dwm-session
+git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./install-arch.sh && ./install-arch.sh && touch ~/font.rasinc
 ```
 
 ### Post-Install Setup
