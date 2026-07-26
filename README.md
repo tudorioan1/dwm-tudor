@@ -93,7 +93,7 @@ Key things to customize in `config.h`:
 - **`rules[]`** — per-application window rules (floating, tags, terminal detection)
 - **`keys[]`** — all keybindings
 - **`MODKEY`** — modifier key (`Mod4Mask` = Super, `Mod1Mask` = Alt)
-
+###My keyboard layout switcher is now configured to en-ro with alt-shift, but you can modify the module to your specific language.
 ---
 
 
