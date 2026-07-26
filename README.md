@@ -33,10 +33,6 @@ This is a fork of CTT's version of dwm modified for my needs. It includes numero
 ```bash
 git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./install-arch.sh && ./install-arch.sh && touch ~/font.rasinc
 ```
-### Make your own config file for dwm
-```bash
-cp config.def.h config.h
-```
 
 ### Post-Install Setup
 
@@ -52,7 +48,8 @@ startx
 The `.xinitrc` disables screen blanking/DPMS (prevents NVIDIA GPU issues on wake), launches Polybar, and starts dwm.
 For changing display resolution or refresh rate, use xrandr.
 ---
-## ! For changing the GTK theming, icon themes, cursor themes and font, launch nwg-look from the terminal (not as root)
+# ! For changing the GTK theming, icon themes, cursor themes and font, launch nwg-look from the terminal (not as root)
+
 ## ⌨️ Keybindings
 
 Press <kbd>SUPER</kbd> + <kbd>/</kbd> inside dwm for an **interactive keybind viewer** (via rofi).
