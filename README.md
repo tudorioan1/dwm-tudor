@@ -62,6 +62,7 @@ sudo pacman -S polybar
 ```bash
 git clone https://github.com/tudorioan1/dwm-tudor.git
 cd dwm-tudor
+cp config.def.h config.h ##Making your own config file for dwm
 make && sudo make install
 ```
 
