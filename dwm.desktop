@@ -1,7 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=dwm-titus
-Comment=Dynamic window manager (Titus config)
+Name=dwm-tudor
+Comment=Dynamic window manager (dwm-tudor)
 Exec=/usr/local/bin/dwm-session
 Icon=dwm
 Type=XSession
