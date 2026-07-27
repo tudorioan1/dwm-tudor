@@ -7,7 +7,7 @@
 # Install this file to /usr/local/bin/dwm-session and:
 #   sudo chmod +x /usr/local/bin/dwm-session
 
-AUTOSTART="${XDG_DATA_HOME:-$HOME/.local/share}/dwm-titus/scripts/autostart.sh"
+AUTOSTART="${XDG_DATA_HOME:-$HOME/.local/share}/dwm-tudor/scripts/autostart.sh"
 
 if [ -x "$AUTOSTART" ]; then
     "$AUTOSTART" &
