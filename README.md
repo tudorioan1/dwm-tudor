@@ -30,8 +30,13 @@ This is a fork of CTT's version of dwm modified for my needs. It includes numero
 - **Multi-monitor** — Xinerama support with per-monitor Polybar bars
 
 ### Installation
+Arch (or Arch-based distributions):
 ```bash
 git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./install-arch.sh && ./install-arch.sh && touch ~/font.rasinc && sudo cp dwm-session /usr/local/bin/ && sudo chmod +x /usr/local/bin/dwm-session
+```
+Fedora/RHEL-based distributions :
+```bash
+git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./install-fedora.sh && ./install-fedora.sh && touch ~/font.rasinc && sudo cp dwm-session /usr/local/bin/ && sudo chmod +x /usr/local/bin/dwm-session
 ```
 
 ### Post-Install Setup
