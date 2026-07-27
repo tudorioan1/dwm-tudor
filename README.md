@@ -30,6 +30,8 @@ This is a fork of CTT's version of dwm modified for my needs. It includes numero
 - **Multi-monitor** — Xinerama support with per-monitor Polybar bars
 
 ### Installation
+
+If you install my dotfiles on a system where other window manager exists, there might be conflicting files and it could not work well.
 Arch (or Arch-based distributions):
 ```bash
 git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./install-arch.sh && ./install-arch.sh && touch ~/font.rasinc && sudo cp dwm-session /usr/local/bin/ && sudo chmod +x /usr/local/bin/dwm-session
