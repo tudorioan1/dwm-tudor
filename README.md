@@ -82,7 +82,7 @@ dwm is configured by editing `config.h` and recompiling:
 $EDITOR config.h
 make && sudo make install
 ```
-## Note : My keyboard layout switcher is now configured to en-ro with alt-shift, but you can modify the module to your specific language.
+> **Note:** My keyboard layout switcher is now configured to en-ro with alt-shift, but you can modify the module to your specific language.
 
 > **Note:** `config.def.h` is the clean default template. `config.h` is your personal customization. If `config.h` doesn't exist, `make` will create it from `config.def.h` automatically.
 
