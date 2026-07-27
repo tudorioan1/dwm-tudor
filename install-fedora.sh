@@ -33,7 +33,7 @@ FONT_DIR="$HOME/.local/share/fonts"
 
 echo ""
 echo "╔═══════════════════════════════════════════╗"
-echo "║      dwm-tudor Installer (Fedora/RHEL)     ║"
+echo "║      dwm-tudor Installer (Fedora/RHEL)    ║"
 echo "╚═══════════════════════════════════════════╝"
 echo ""
 info "Package manager: $PKG_CMD"
