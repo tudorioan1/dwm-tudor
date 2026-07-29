@@ -38,7 +38,7 @@ Arch (or Arch-based distributions):
 ```bash
 git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./install-arch.sh && ./install-arch.sh && touch ~/font.rasinc && sudo cp dwm-session /usr/local/bin/ && sudo chmod +x /usr/local/bin/dwm-session
 ```
-Fedora/RHEL-based distributions :
+Fedora/RHEL-based distributions (Beta, still working on the installer) :
 ```bash
 git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./install-fedora.sh && ./install-fedora.sh && touch ~/font.rasinc && sudo cp dwm-session /usr/local/bin/ && sudo chmod +x /usr/local/bin/dwm-session
 ```
