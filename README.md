@@ -8,9 +8,9 @@
 
 ---
 ! Note !
-This project is still in beta, so expect some minor bugs.
+This project is still in beta, so expect some minor bugs (especially on the Fedora version).
 
-This is a fork of CTT's version of dwm modified for my needs. It includes numerous patches and customizations for a productive, user-friendly desktop on Arch Linux (and Fedora) with X11.
+This is a fork of CTT's dwm heavily modified for my needs. It includes numerous patches and customizations for a productive, user-friendly desktop on Arch Linux (and Fedora) with X11.
 <img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/7a9d0545-48f7-4b29-aa4b-be7e093afb93" />
 
 
