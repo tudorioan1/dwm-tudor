@@ -95,7 +95,7 @@ make && sudo make install
 
 > **Note:** `config.def.h` is the clean default template. `config.h` is your personal customization. If `config.h` doesn't exist, `make` will create it from `config.def.h` automatically.
 
-> **Note:** You can change the theme in this dwm config by simply editing ``~/.config/dwm-tudor/themes.toml``. Follow the instructions written there.
+> **Note:** You can change the theme in this dwm config by simply editing ``~/.config/dwm-tudor/themes.toml``. Follow the instructions written there. The default theme will be monochrome.
 
 
 Key things to customize in `config.h`:
