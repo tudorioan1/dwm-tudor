@@ -38,18 +38,18 @@ Arch (Stable, tested):
 ```bash
 git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./install-arch.sh && ./install-arch.sh && touch ~/font.rasinc && sudo cp dwm-session /usr/local/bin/ && sudo chmod +x /usr/local/bin/dwm-session
 ```
-Fedora (Beta, still working on the installer, not all the dependencies are working) :
+Fedora (Beta, still working on the installer, not all the dependencies are working properly) :
 ```bash
 git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./install-fedora.sh && ./install-fedora.sh && touch ~/font.rasinc && sudo cp dwm-session /usr/local/bin/ && sudo chmod +x /usr/local/bin/dwm-session
 ```
 
 ### Post-Install Setup
 
-**Option A — Display Manager** (SDDM, GDM, LightDM):
+**Option A — Display Manager** (SDDM, GDM, LightDM, etc.):
 Log out, select **dwm** from the session menu, and log back in.
 
 **Option B — startx**:
-The installer places `.xinitrc` in your home directory. Start with:
+The installer places `.xinitrc` in your home directory. Start from TTY with:
 ```bash
 startx
 ```
@@ -82,7 +82,7 @@ Press <kbd>SUPER</kbd> + <kbd>/</kbd> inside dwm for an **interactive keybind vi
 | <kbd>SUPER</kbd> + <kbd>Ctrl</kbd> + <kbd>Q</kbd> | Power menu |
 | <kbd>SUPER</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> | Screenshot (Flameshot) |
 ---
-! Known issues : If flameshot is not working, enter the configuration menu by right-clicking on the flameshot icon in the system tray (after opening it from rofi) and enable legacy X11 screenshot method.
+! Known issues : If flameshot is not working, enter the configuration menu by right-clicking on the flameshot icon in the system tray (after opening it from rofi or terminal) and enable legacy X11 screenshot method.
 ## 🔧 Configuration
 
 dwm is configured by editing `config.h` and recompiling:
@@ -91,17 +91,24 @@ dwm is configured by editing `config.h` and recompiling:
 $EDITOR config.h
 make && sudo make install
 ```
+
+## 🎨 Theming
+> **Note:** You can change the theme in this dwm config by simply editing ``~/.config/dwm-tudor/themes.toml``. Follow the instructions written there. The default theme will be monochrome.
+
+> **Note** The default rofi theme is called ``theme``, if you switch themes, it will probably go to the sidebar theme, use Rofi Theme Selector to change the theme.
+
+
+## 🧩 Miscellaneous
+
 > **Note:** My keyboard layout switcher is now configured to en-ro (alt-shift), but you can modify the module to your specific language.
 
 > **Note:** `config.def.h` is the clean default template. `config.h` is your personal customization. If `config.h` doesn't exist, `make` will create it from `config.def.h` automatically.
 
-> **Note:** You can change the theme in this dwm config by simply editing ``~/.config/dwm-tudor/themes.toml``. Follow the instructions written there. The default theme will be monochrome.
-
 
 Key things to customize in `config.h`:
-- **`refresh_rate`** — match your monitor (default: 60, set to 120 for high-refresh)
+- **`refresh_rate`** — match your monitor (default: 60, set to the highest refresh rate that your monitor supports for high-refresh, or use xrandr in the autostart script)
 - **`fonts[]`** — font family and size
-- **`colors[]`** — color scheme (Nord theme by default in config.h)
+- **`colors[]`** — color scheme
 - **`autostart[]`** — programs launched on startup
 - **`rules[]`** — per-application window rules (floating, tags, terminal detection)
 - **`keys[]`** — all keybindings
