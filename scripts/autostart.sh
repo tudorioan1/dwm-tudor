@@ -28,7 +28,7 @@ THEME_ENV="${XDG_CONFIG_HOME:-$HOME/.config}/dwm-titus/theme-env.sh"
 feh --randomize --bg-fill ~/Pictures/backgrounds/* 2>/dev/null &
 
 # Compositor
-picom -backend glx 2>/dev/null &
+picom -b 2>/dev/null &
 
 # Notification daemon
 dunst 2>/dev/null &
