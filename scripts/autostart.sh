@@ -1,5 +1,5 @@
 #!/bin/sh
-# dwm-titus autostart — single unified autostart script
+# dwm-tudor autostart — single unified autostart script
 # Phase 1: Blocking setup (must complete before windows appear)
 # Phase 2: Background services (compositor, notifications, polybar, tray apps)
 
@@ -28,7 +28,7 @@ THEME_ENV="${XDG_CONFIG_HOME:-$HOME/.config}/dwm-titus/theme-env.sh"
 feh --randomize --bg-fill ~/Pictures/backgrounds/* 2>/dev/null &
 
 # Compositor
-picom -b 2>/dev/null &
+picom -backend glx 2>/dev/null &
 
 # Notification daemon
 dunst 2>/dev/null &
