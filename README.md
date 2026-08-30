@@ -61,7 +61,8 @@ startx
 For changing display resolution or refresh rate, use xrandr.**
 
 
-**- For changing the GTK theming, icon themes, cursor themes and font, launch nwg-look from the terminal (not as root).**
+**-  For changing the GTK theming, icon themes, cursor themes and font, launch nwg-look from the terminal (not as root).**
+
 
 ## ⌨️ Keybindings
 
