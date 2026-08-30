@@ -55,10 +55,11 @@ The installer places `.xinitrc` in your home directory. Start from TTY with:
 startx
 ```
 
-The `.xinitrc` disables screen blanking/DPMS (prevents NVIDIA GPU issues on wake), launches Polybar, and starts dwm.
-For changing display resolution or refresh rate, use xrandr.
+
 ---
-**! For changing the GTK theming, icon themes, cursor themes and font, launch nwg-look from the terminal (not as root).**
+**The `.xinitrc` disables screen blanking/DPMS (prevents NVIDIA GPU issues on wake), launches Polybar, and starts dwm.
+For changing display resolution or refresh rate, use xrandr.**
+**- For changing the GTK theming, icon themes, cursor themes and font, launch nwg-look from the terminal (not as root).**
 
 ## ⌨️ Keybindings
 
