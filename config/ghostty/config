@@ -12,6 +12,7 @@ font-family-bold-italic = MesloLGS Nerd Font Mono
 font-size = 14
 gtk-titlebar = false
 confirm-close-surface = false
+window-decoration = false
 
 
 #keybind = ctrl+up=scroll_page_lines:5
