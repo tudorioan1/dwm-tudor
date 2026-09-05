@@ -111,7 +111,7 @@ make && sudo make install
 
 
 Key things to customize in `config.h`:
-- **`refresh_rate`** — match your monitor (set to the highest refresh rate that your monitor supports, or use xrandr in the autostart script)
+- **`refresh_rate`** — set to the highest refresh rate that your monitor supports, or use xrandr in the autostart script
 - **`fonts[]`** — font family and size
 - **`colors[]`** — color scheme
 - **`autostart[]`** — programs launched on startup
