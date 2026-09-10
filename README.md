@@ -32,14 +32,14 @@ This is a fork of CTT's dwm heavily modified for my needs. It includes numerous 
 
 ### Installation
 
-If you install my dotfiles on a system where other window manager exists, there might be conflicting files and it could not work well.
+If you install my custom setup on a system where other window manager exists, there might be conflicting files and it could not work well.
 
 
 Arch (Stable, tested):
 ```bash
 git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./install-arch.sh && ./install-arch.sh && touch ~/font.rasinc && sudo cp dwm-session /usr/local/bin/ && sudo chmod +x /usr/local/bin/dwm-session
 ```
-Fedora (Beta, still working on the installer, not all the dependencies are working properly) :
+Fedora (Working perfectly fine now, just a bug in the control center with the dependencies check) :
 ```bash
 git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./install-fedora.sh && ./install-fedora.sh && touch ~/font.rasinc && sudo cp dwm-session /usr/local/bin/ && sudo chmod +x /usr/local/bin/dwm-session
 ```
