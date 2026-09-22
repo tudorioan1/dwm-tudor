@@ -73,7 +73,7 @@ Press <kbd>SUPER</kbd> + <kbd>/</kbd> inside dwm for an **interactive keybind vi
 | Keybind | Action |
 |---------|--------|
 | <kbd>SUPER</kbd> + <kbd>X</kbd> | Open terminal |
-| <kbd>SUPER</kbd> + <kbd>R</kbd> | Launch rofi  |
+| <kbd>SUPER</kbd> + <kbd>R</kbd> | Launch rofi (App Launcher) |
 | <kbd>SUPER</kbd> + <kbd>Q</kbd> | Close window |
 | <kbd>SUPER</kbd> + <kbd>J</kbd> / <kbd>K</kbd> | Focus next / previous window |
 | <kbd>SUPER</kbd> + <kbd>H</kbd> / <kbd>L</kbd> | Resize master area |
@@ -99,6 +99,8 @@ make && sudo make install
 
 ## 🎨 Theming
 > **Note:** You can change the theme in this dwm config by simply editing ``~/.config/dwm-tudor/themes.toml``. Follow the instructions written there. The default theme will be monochrome.
+
+For modifying the keybindings, modify the ``~/.config/dwm-tudor/hotkeys.toml`` file. No logout needed, it is hot-reloading.
 
 > **Note** The default rofi theme is called ``theme``, if you switch themes, it will probably go to the sidebar theme, use Rofi Theme Selector to change the theme.
 
