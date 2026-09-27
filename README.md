@@ -7,11 +7,11 @@
 </div>
 
 ---
-> **Note** : This project is still in beta, so expect some minor bugs (especially on the Fedora version).
+> **Note** : This project is still in beta, so expect some minor bugs.
 
 > **Info** : I've switched from X.org to XLibre on this dwm setup and it works great, if you want I recommend try out XLibre (at your own risk). If you don't know what XLibre is, check out `https://www.xlibre.net/`.
 
-This is a fork of CTT's dwm heavily modified for my needs. It includes numerous patches and customizations for a productive, user-friendly desktop on Arch Linux (and Fedora) with X11.
+This is a fork of CTT's dwm heavily modified for my needs. It includes numerous patches and customizations for a productive, user-friendly desktop on Arch Linux, Fedora and Debian with X11.
 <img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/7a9d0545-48f7-4b29-aa4b-be7e093afb93" />
 
 
@@ -42,6 +42,10 @@ git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./
 Fedora (Working perfectly fine now, just a bug in the control center with the dependencies check) :
 ```bash
 git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./install-fedora.sh && ./install-fedora.sh && touch ~/font.rasinc && sudo cp dwm-session /usr/local/bin/ && sudo chmod +x /usr/local/bin/dwm-session
+```
+Debian (there is a bug in the dwm control center with the dependencies check) :
+```bash
+git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./install-debian.sh && ./install-debian.sh && touch ~/.config/rofi/config/font.rasi && sudo cp dwm-session /usr/local/bin/ && sudo chmod +x /usr/local/bin/dwm-session
 ```
 
 ### Post-Install Setup
