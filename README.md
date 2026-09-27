@@ -102,7 +102,7 @@ make && sudo make install
 ```
 
 ## 🎨 Theming
-> **Note:** You can change the theme in this dwm config by simply editing ``~/.config/dwm-tudor/themes.toml``. Follow the instructions written there. The default theme will be monochrome.
+> **Note:** You can change the theme in this dwm config by simply editing ``~/.config/dwm-titus/themes.toml``. Follow the instructions written there. The default theme will be monochrome.
 
 For modifying the keybindings, modify the ``~/.config/dwm-tudor/hotkeys.toml`` file. No logout needed, it is hot-reloading.
 
