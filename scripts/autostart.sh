@@ -50,6 +50,7 @@ done
 
 # Launch Polybar
 "$HOME/.config/polybar/launch.sh" 2>/dev/null &
+flameshot &
 
 dex -a 2>/dev/null
 setxkbmap -layout us,ro -variant ,std -option grp:alt_shift_toggle

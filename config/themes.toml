@@ -432,7 +432,7 @@ selfgcolor      = "#FFFFFF"
 selbgcolor      = "#333333"
 selbordercolor  = "#FFFFFF"
 
-term_bg         = "#1A1A1A"
+term_bg         = "#0D0D0D"
 term_fg         = "#CCCCCC"
 term_cursor     = "#FFFFFF"
 term_color0     = "#1A1A1A"
@@ -456,7 +456,8 @@ ghostty_theme   = "Monochrome"
 rofi_theme      = "theme"
 dark_mode       = true
 
-polybar_bg      = "#1A1A1A"
+#polybar_bg      = "#H3A2I2"
+polybar_bg	= "#080808"
 polybar_fg      = "#CCCCCC"
 polybar_bg_alt  = "#333333"
 polybar_fg_alt  = "#777777"

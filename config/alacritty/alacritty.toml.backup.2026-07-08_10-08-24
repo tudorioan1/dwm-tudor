@@ -1,0 +1,12 @@
+[window]
+padding = { x = 12, y = 12 }
+opacity = 0.95 # Transparență ca în video-ul lui CTT
+blur = true    # Dacă folosești un compositor (KDE/Hyprland)
+
+[font]
+normal = { family = "JetBrainsMono Nerd Font", style = "Medium" }
+size = 11.0
+
+[colors.primary]
+background = "#1a1b26" # Tema Tokyo Night (foarte populară acum)
+foreground = "#a9b1d6"

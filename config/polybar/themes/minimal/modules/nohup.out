@@ -1,0 +1,2 @@
+polybar|notice:  Parsing config file: /home/tudor/.config/polybar/config.ini
+polybar|error: Uncaught exception, shutting down: The config file contains multiple bars, but no bar name was given. Available bars: main, secondary
