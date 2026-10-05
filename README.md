@@ -9,8 +9,10 @@
 ---
 > **Note** : This project is still in beta, so expect some minor bugs.
 
-This is a fork of CTT's dwm heavily modified for my needs. It includes numerous patches and customizations for a productive, user-friendly desktop on Arch Linux, Fedora and Debian with X11.
-<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/7a9d0545-48f7-4b29-aa4b-be7e093afb93" />
+A beautiful and super fast X11 desktop based on Suckless' DWM, that was heavily modified for my needs. It includes numerous patches and customizations for a productive, user-friendly desktop on Arch Linux, Fedora and Debian with X11.
+
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/9494bd51-8d6b-483c-b1c9-c274021b2a61" />
+
 
 
 ### Patches & Features
