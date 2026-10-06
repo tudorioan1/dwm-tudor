@@ -1,0 +1,33 @@
+Primary monitor detected: HDMI-0
+Detected 1 monitors: HDMI-0
+Single monitor setup - launching main polybar with tray and EWMH on HDMI-0
+polybar|notice:  Parsing config file: /home/tudor/.config/polybar/themes/minimal/config.ini
+polybar|notice:  Loading module 'dwm-tags' of type 'custom/script'
+polybar|notice:  Loading module 'title' of type 'internal/xwindow'
+polybar|notice:  Loading module 'cpu' of type 'internal/cpu'
+polybar|notice:  Loading module 'memory' of type 'internal/memory'
+polybar|notice:  Loading module 'keyboard' of type 'internal/xkeyboard'
+polybar|notice:  Loading module 'pulseaudio' of type 'internal/pulseaudio'
+polybar|notice:  pulseaudio: using default sink alsa_output.usb-Creative_Technology_Ltd_Sound_Blaster_Play__3_YDSB1730534002205C-00.analog-stereo
+polybar|notice:  Loading module 'date' of type 'internal/date'
+polybar|notice:  Loading module 'tray' of type 'internal/tray'
+polybar|notice:  Loading module 'powermenu' of type 'custom/text'
+polybar|warn:  The config parameter `module/powermenu.content` is deprecated, use `module/powermenu.format` instead.
+polybar|notice:  Loaded 9 modules
+polybar|notice:  Loaded font "MesloLGS Nerd Font:style=Normal:size=12" (name=MesloLGS Nerd Font, offset=3, file=/usr/share/fonts/TTF/MesloLGSNerdFont-Regular.ttf)
+polybar|notice:  Loaded font "MesloLGS Nerd Font:style=Medium:size=12" (name=MesloLGS Nerd Font, offset=3, file=/usr/share/fonts/TTF/MesloLGSNerdFont-Regular.ttf)
+polybar|notice:  Loaded font "MesloLGS Nerd Font:style=Bold:size=12" (name=MesloLGS Nerd Font, offset=3, file=/usr/share/fonts/TTF/MesloLGSNerdFont-Bold.ttf)
+polybar|notice:  Loaded font "MesloLGS Nerd Font:style=Italic:size=12" (name=MesloLGS Nerd Font, offset=3, file=/usr/share/fonts/TTF/MesloLGSNerdFont-Italic.ttf)
+polybar|notice:  Loaded font "MesloLGS Nerd Font:style=Medium Italic:size=12" (name=MesloLGS Nerd Font, offset=3, file=/usr/share/fonts/TTF/MesloLGSNerdFont-Regular.ttf)
+polybar|notice:  Loaded font "MesloLGS Nerd Font:size=19" (name=MesloLGS Nerd Font, offset=5, file=/usr/share/fonts/TTF/MesloLGSNerdFont-Regular.ttf)
+polybar|notice:  Loaded font "Feather:size=12" (name=feather, offset=3, file=/home/tudor/.local/share/fonts/feather.ttf)
+polybar|notice:  Loaded font "Material Icons:size=13" (name=Material Icons, offset=4, file=/home/tudor/.local/share/fonts/MaterialIcons/MaterialIcons-Regular.ttf)
+polybar|notice:  Loaded font "Material Icons Outlined:size=13" (name=Material Icons Outlined, offset=4, file=/home/tudor/.local/share/fonts/MaterialIcons/MaterialIconsOutlined-Regular.otf)
+polybar|notice:  Loaded font "Material Icons Round:size=13" (name=Material Icons Round, offset=4, file=/home/tudor/.local/share/fonts/MaterialIcons/MaterialIconsRound-Regular.otf)
+polybar|notice:  Loaded font "Material Icons Sharp:size=13" (name=Material Icons Sharp, offset=4, file=/home/tudor/.local/share/fonts/MaterialIcons/MaterialIconsSharp-Regular.otf)
+polybar|notice:  Loaded font "Material Icons TwoTone:size=13" (name=Material Icons Two Tone, offset=4, file=/home/tudor/.local/share/fonts/MaterialIcons/MaterialIconsTwoTone-Regular.otf)
+polybar|notice:  Loaded font "Noto Color Emoji:size=10" (name=Noto Color Emoji, offset=2, file=/usr/share/fonts/noto/NotoColorEmoji.ttf)
+polybar|error: tray: Failed to clear client(0x5a00003, deadbeef) (XCB_WINDOW (3))
+polybar|error: tray: Failed to unembed window '' (0x5a00003)
+polybar|notice:  Received signal(15): Terminated
+polybar|notice:  Termination signal received, shutting down...
