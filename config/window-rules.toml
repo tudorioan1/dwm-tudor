@@ -34,6 +34,7 @@ rules = [
   # ── floating ─────────────────────────────────────────────────────────────
   # { class="Gimp",           isfloating=1 },
   # { class="pavucontrol",    isfloating=1 },
+  { title="wallpaper-picker", isfloating=1 },
 
   # ── assign to tag ────────────────────────────────────────────────────────
   # { class="firefox",        tags=2 },

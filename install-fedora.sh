@@ -54,7 +54,7 @@ ok "Build dependencies installed."
 
 # ── Runtime dependencies ─────────────────────────────────
 info "Installing runtime dependencies..."
-install_packages rofi picom dunst feh flameshot dex-autostart mate-polkit alsa-utils git curl unzip xclip \
+install_packages rofi picom dunst feh flameshot quickshell dex-autostart mate-polkit alsa-utils git curl unzip xclip \
     xprop thunar gvfs tumbler thunar-archive-plugin xdg-user-dirs \
     xdg-desktop-portal-gtk pipewire pavucontrol gnome-keyring NetworkManager network-manager-applet \
     libnotify rsync

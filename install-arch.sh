@@ -35,7 +35,7 @@ ok "Build dependencies installed."
 
 # ── Runtime dependencies ─────────────────────────────────
 info "Installing runtime dependencies..."
-install_packages rofi picom dunst feh flameshot dex mate-polkit alsa-utils git unzip xclip \
+install_packages rofi picom dunst feh quickshell flameshot dex mate-polkit alsa-utils git unzip xclip \
     xorg-xprop thunar gvfs tumbler thunar-archive-plugin nwg-look xdg-user-dirs \
     xdg-desktop-portal-gtk pipewire pavucontrol gnome-keyring networkmanager network-manager-applet \
     libnotify rsync
@@ -68,8 +68,8 @@ for t in ghostty kitty alacritty; do command -v "$t" &>/dev/null && { terminal="
 if [ -n "$terminal" ]; then
     ok "Terminal already installed: $terminal"
 else
-    info "No supported terminal found — installing ghostty..."
-    install_packages ghostty 2>/dev/null || warn "ghostty not in repos — install from https://ghostty.org"
+    info "No supported terminal found — installing alacritty..."
+    install_packages alacritty 2>/dev/null || warn "alacritty not in repos — install manually"
 fi
 
 # ── Polybar + XDG dirs + wallpapers ──────────────────────
@@ -115,9 +115,9 @@ info "Detected: $DISTRO_NAME"
 echo "  • Edit config.h to customize, then: make && sudo make install"
 echo "  • Log out and select 'dwm', or start with: startx"
 echo ""
-echo "  SUPER+/   keybind viewer     SUPER+X  terminal"
-echo "  SUPER+F1  control center     SUPER+R  app launcher (rofi)"
+echo "  SUPER+/   keybind viewer     SUPER+X  terminal (alacritty by default)"
+echo "  SUPER+F1  dwm control center SUPER+R  app launcher (rofi)"
 echo "  SUPER+Q   close window"
 echo ""
-echo "  Full reference: docs/src/keybinds.md or SUPER+/ in dwm"
+echo "  Full reference: SUPER+/ in dwm"
 echo ""
