@@ -10,8 +10,7 @@
 > **Note** : This project is still in beta, so expect some minor bugs.
 
 A beautiful and super fast experience based on Suckless' DWM, that was heavily modified for my needs. It includes numerous patches and customizations for a productive, user-friendly desktop on Arch Linux, Fedora and Debian with X11.
-
-![Uploading image.png…]()
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/2be9d3ef-42b2-4880-bb91-13344ad5b626" />
 
 
 
