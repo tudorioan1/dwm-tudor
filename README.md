@@ -7,7 +7,7 @@
 </div>
 
 ---
-> **Note** : This project is still very rough around the edges, it is not for everyone! It implies understanding how things really works.
+> **Note** : This project is still very rough around the edges, it is not for everyone! It implies understanding how Linux and window managers really work.
 
 A functional, minimalist and super fast desktop experience based on Suckless' DWM, that was heavily modified for my needs. It includes numerous patches and customizations for a productive workflow on Arch Linux, Fedora and Debian with X11.
 <img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/2be9d3ef-42b2-4880-bb91-13344ad5b626" />
