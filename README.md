@@ -7,7 +7,7 @@
 </div>
 
 ---
-> **Note** : This project is still very rough around the edges, it is not for everyone! It implies understanding how Linux and window managers really work.
+> **Note** : This project is still very rough around the edges, it is not for everyone! It implies understanding how Linux and window managers really work. This is made specifically for me and it might need additional troubleshooting after installing. 
 
 A functional, minimalist and super fast desktop experience based on Suckless' DWM, that was heavily modified for my needs. It includes numerous patches and customizations for a productive workflow on Arch Linux, Fedora and Debian with X11.
 <img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/2be9d3ef-42b2-4880-bb91-13344ad5b626" />
@@ -39,11 +39,11 @@ Arch (Stable, tested):
 ```bash
 git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./install-arch.sh && ./install-arch.sh && touch ~/font.rasinc && sudo cp dwm-session /usr/local/bin/ && sudo chmod +x /usr/local/bin/dwm-session
 ```
-Fedora (Working perfectly fine now, just a bug in the control center with the dependencies check) :
+Fedora (Alpha) :
 ```bash
 git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./install-fedora.sh && ./install-fedora.sh && touch ~/font.rasinc && sudo cp dwm-session /usr/local/bin/ && sudo chmod +x /usr/local/bin/dwm-session
 ```
-Debian (there is a bug in the dwm control center with the dependencies check) :
+Debian (Alpha) :
 ```bash
 git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./install-debian.sh && ./install-debian.sh && touch ~/.config/rofi/config/font.rasi && sudo cp dwm-session /usr/local/bin/ && sudo chmod +x /usr/local/bin/dwm-session
 ```
