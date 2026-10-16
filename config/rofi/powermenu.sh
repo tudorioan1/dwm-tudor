@@ -13,7 +13,7 @@ set -e
 set -u
 
 # All supported choices
-all=(shutdown reboot suspend hibernate logout)
+all=(shutdown reboot suspend logout)
 
 # By default, show all (i.e., just copy the array)
 show=("${all[@]}")
@@ -23,7 +23,7 @@ texts[lockscreen]="lock screen"
 texts[switchuser]="switch user"
 texts[logout]="log out"
 texts[suspend]="suspend"
-texts[hibernate]="hibernate"
+#texts[hibernate]="hibernate"
 texts[reboot]="reboot"
 texts[shutdown]="shut down"
 
@@ -32,7 +32,7 @@ icons[lockscreen]=$'\Uf033e'
 icons[switchuser]=$'\Uf0019'
 icons[logout]=$'\Uf0343'
 icons[suspend]=$'\Uf04b2'
-icons[hibernate]=$'\Uf02ca'
+#icons[hibernate]=$'\Uf02ca'
 icons[reboot]=$'\Uf0709'
 icons[shutdown]=$'\Uf0425'
 icons[cancel]=$'\Uf0156'
@@ -42,7 +42,7 @@ actions[lockscreen]="loginctl lock-session ${XDG_SESSION_ID-}"
 #actions[switchuser]="???"
 actions[logout]="loginctl terminate-session ${XDG_SESSION_ID-}"
 actions[suspend]="systemctl suspend"
-actions[hibernate]="systemctl hibernate"
+#actions[hibernate]="systemctl hibernate"
 actions[reboot]="systemctl reboot"
 actions[shutdown]="systemctl poweroff"
 
