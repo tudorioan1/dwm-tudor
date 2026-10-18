@@ -35,15 +35,15 @@ A functional, minimalist and super fast desktop experience based on Suckless' DW
 If you install my custom setup on a system where other window manager exists, there might be conflicting files and it could not work well.
 
 
-Arch (Stable, tested):
+Arch :
 ```bash
 git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./install-arch.sh && ./install-arch.sh
 ```
-Fedora (Alpha) :
+Fedora :
 ```bash
 git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./install-fedora.sh && ./install-fedora.sh
 ```
-Debian (Alpha) :
+Debian :
 ```bash
 git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./install-debian.sh && ./install-debian.sh
 ```
