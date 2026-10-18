@@ -47,6 +47,7 @@ Debian :
 ```bash
 git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./install-debian.sh && ./install-debian.sh
 ```
+## Important Note : On the Debian installer, you might need to install the quickshell package manually for the wallpaper-picker widget.
 
 The installers also install **JetBrainsMono Nerd Font** (package `ttf-jetbrains-mono-nerd` on Arch, upstream download on Fedora/Debian). `dwm-session` is installed by `make install`; no manual copy step is needed.
 
