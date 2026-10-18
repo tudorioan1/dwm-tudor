@@ -1,6 +1,6 @@
 #!/bin/bash
 # ─────────────────────────────────────────────────────────
-# dwm-titus dependency checker — Arch Linux & Fedora
+# dwm-tudor dependency checker — Arch Linux & Fedora
 # Run before building to verify all required packages
 # are installed. Exit code 0 = all good, 1 = missing deps.
 # ─────────────────────────────────────────────────────────
@@ -135,9 +135,9 @@ check_font() {
 
 echo ""
 if [ "$DISTRO" = "arch" ]; then
-    echo "═══ dwm-titus Dependency Check (Arch Linux) ═══"
+    echo "═══ dwm-tudor Dependency Check (Arch Linux) ═══"
 else
-    echo "═══ dwm-titus Dependency Check (Fedora) ═══"
+    echo "═══ dwm-tudor Dependency Check (Fedora) ═══"
 fi
 echo ""
 
@@ -222,7 +222,7 @@ echo ""
 
 # ── Fonts ───────────────────────────────────────────────
 echo "Fonts:"
-check_font "MesloLGS Nerd Font"
+check_font "JetBrainsMono Nerd Font"
 check_font "Noto Color Emoji"
 echo ""
 

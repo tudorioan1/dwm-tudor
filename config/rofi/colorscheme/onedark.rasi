@@ -1,6 +1,6 @@
 * {
     /* Fundaluri (Negru & Gri foarte închis) */
-    bg0: #121212;          /* Negru profund pentru fundalul principal */
+    bg0: #010101;          /* Negru profund pentru fundalul principal */
     bg1: #1e1e1e;          /* Gri închis pentru panouri secundare/border-uri */
     
     /* Fonturi (Alb & Gri dezactivat) */

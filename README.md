@@ -37,16 +37,18 @@ If you install my custom setup on a system where other window manager exists, th
 
 Arch (Stable, tested):
 ```bash
-git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./install-arch.sh && ./install-arch.sh && touch ~/font.rasinc && sudo cp dwm-session /usr/local/bin/ && sudo chmod +x /usr/local/bin/dwm-session
+git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./install-arch.sh && ./install-arch.sh
 ```
 Fedora (Alpha) :
 ```bash
-git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./install-fedora.sh && ./install-fedora.sh && touch ~/font.rasinc && sudo cp dwm-session /usr/local/bin/ && sudo chmod +x /usr/local/bin/dwm-session
+git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./install-fedora.sh && ./install-fedora.sh
 ```
 Debian (Alpha) :
 ```bash
-git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./install-debian.sh && ./install-debian.sh && touch ~/.config/rofi/config/font.rasi && sudo cp dwm-session /usr/local/bin/ && sudo chmod +x /usr/local/bin/dwm-session
+git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./install-debian.sh && ./install-debian.sh
 ```
+
+The installers also install **JetBrainsMono Nerd Font** (package `ttf-jetbrains-mono-nerd` on Arch, upstream download on Fedora/Debian). `dwm-session` is installed by `make install`; no manual copy step is needed.
 
 ### Post-Install Setup
 
@@ -102,7 +104,7 @@ make && sudo make install
 ```
 
 ## 🎨 Theming
-> **Note:** You can change the theme in this dwm config by simply editing ``~/.config/dwm-titus/themes.toml``. Follow the instructions written there. The default theme will be monochrome.
+> **Note:** You can change the theme in this dwm config by simply editing ``~/.config/dwm-tudor/themes.toml``. Follow the instructions written there. The default theme will be monochrome.
 
 For modifying the keybindings, modify the ``~/.config/dwm-tudor/hotkeys.toml`` file. No logout needed, it is hot-reloading.
 

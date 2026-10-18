@@ -36,7 +36,7 @@ ok "Build dependencies installed."
 # ── Runtime dependencies ─────────────────────────────────
 info "Installing runtime dependencies..."
 install_packages rofi picom dunst feh quickshell flameshot dex mate-polkit alsa-utils git unzip xclip \
-    xorg-xprop thunar gvfs tumbler thunar-archive-plugin nwg-look xdg-user-dirs \
+    xorg-xprop xdotool xorg-setxkbmap thunar gvfs tumbler thunar-archive-plugin nwg-look xdg-user-dirs \
     xdg-desktop-portal-gtk pipewire pavucontrol gnome-keyring networkmanager network-manager-applet \
     libnotify rsync
 ok "Runtime dependencies installed."
@@ -52,12 +52,17 @@ ok "Qt/GTK theming dependencies installed."
 
 # ── Fonts ────────────────────────────────────────────────
 info "Installing fonts..."
-install_packages noto-fonts-emoji ttf-meslo-nerd
+install_packages noto-fonts-emoji ttf-jetbrains-mono-nerd
 FONT_DIR="$HOME/.local/share/fonts"
 mkdir -p "$FONT_DIR"
 if [ -d "$REPO_DIR/config/polybar/fonts" ]; then
     cp -r "$REPO_DIR/config/polybar/fonts/"* "$FONT_DIR/"
-    fc-cache -fv >/dev/null 2>&1
+fi
+fc-cache -f >/dev/null 2>&1
+if fc-list 2>/dev/null | grep -qi "JetBrainsMono Nerd Font"; then
+    ok "JetBrainsMono Nerd Font available."
+else
+    warn "JetBrainsMono Nerd Font NOT found by fontconfig - icons in the bar/terminal/rofi will show as boxes."
 fi
 ok "Fonts installed."
 
@@ -103,7 +108,10 @@ fi
 
 # ── Build & Install ──────────────────────────────────────
 cd "$REPO_DIR"
-sudo make clean install
+# Build as the normal user (root-owned objects break later rebuilds), install as root.
+make clean
+make
+sudo make install
 
 # ── Done ─────────────────────────────────────────────────
 echo ""

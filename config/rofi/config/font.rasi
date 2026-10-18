@@ -1,0 +1,4 @@
+/* font.rasi - satisfies `@import "font"` in config/general.rasi */
+* {
+    font: "JetBrainsMono Nerd Font 12";
+}

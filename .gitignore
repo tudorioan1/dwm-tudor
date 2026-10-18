@@ -1,0 +1,12 @@
+# build output
+/dwm
+*.o
+/config.h
+*.orig
+*.rej
+/release/
+
+# runtime junk
+nohup.out
+config/quickshell/wallpaper-picker/last-dir
+*.bak-dwm-tudor

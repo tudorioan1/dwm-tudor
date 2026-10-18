@@ -59,7 +59,7 @@ static const Layout layouts[] = {
 	{ MODKEY|ControlMask|ShiftMask, KEY, toggletag,  {.ui = 1 << TAG} },
 
 /* commands */
-static const char *termcmd[]  = { "ghostty", NULL };
+static const char *termcmd[]  = { "alacritty", NULL };
 static const char *filecmd[]  = { "thunar", NULL };
 static const char *webcmd[]   = { "firefox", NULL };
 

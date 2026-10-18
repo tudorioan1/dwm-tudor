@@ -76,9 +76,13 @@ fi
 
 # Wait for Polybar to be ready before returning.
 # This ensures tray apps started after this script can find the tray owner.
-for i in $(seq 1 30); do
-    if xdotool search --class Polybar >/dev/null 2>&1; then
-        break
-    fi
-    sleep 0.1
-done
+if command -v xdotool >/dev/null 2>&1; then
+    for i in $(seq 1 30); do
+        if xdotool search --class Polybar >/dev/null 2>&1; then
+            break
+        fi
+        sleep 0.1
+    done
+else
+    sleep 1   # xdotool not installed - give polybar a moment instead
+fi
