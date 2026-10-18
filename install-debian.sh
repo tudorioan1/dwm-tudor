@@ -26,8 +26,16 @@ fi
 
 export DEBIAN_FRONTEND=noninteractive
 
+# Install a batch; if apt rejects the batch because ONE package is unknown, retry one
+# by one so a single missing package no longer aborts the whole install.
 install_packages() {
-    sudo apt-get install -y "$@"
+    sudo apt-get install -y "$@" && return 0
+    warn "Batch install failed - retrying package by package..."
+    local p rc=0
+    for p in "$@"; do
+        sudo apt-get install -y "$p" || { warn "Could not install: $p"; rc=1; }
+    done
+    return $rc
 }
 
 BG_DIR="$HOME/Pictures/backgrounds"
@@ -75,11 +83,15 @@ ok "Build dependencies installed."
 
 # ── Runtime dependencies ─────────────────────────────────
 info "Installing runtime dependencies..."
-install_packages rofi picom dunst quickshell feh flameshot dex mate-polkit alsa-utils git curl unzip xclip \
+install_packages rofi picom dunst feh flameshot dex mate-polkit alsa-utils git curl unzip xclip \
     thunar gvfs tumbler thunar-archive-plugin xdg-user-dirs \
     xdg-desktop-portal-gtk pipewire pavucontrol gnome-keyring network-manager network-manager-gnome \
-    libnotify-bin rsync
+    libnotify-bin rsync xdotool x11-xkb-utils || true
 ok "Runtime dependencies installed."
+
+# quickshell is not in Debian stable (only testing/unstable) - needed for the wallpaper picker only
+install_packages quickshell 2>/dev/null \
+    || warn "quickshell not available via apt - wallpaper picker disabled. See https://quickshell.org/docs/guide/install-setup"
 
 # nwg-look isn't packaged for Debian/Ubuntu — no clean apt/PPA equivalent
 install_packages nwg-look 2>/dev/null \
@@ -99,22 +111,31 @@ info "Installing fonts..."
 install_packages fonts-noto-color-emoji
 mkdir -p "$FONT_DIR"
 
-# Meslo Nerd Font isn't packaged for Debian/Ubuntu — fetch it from upstream
-if ! fc-list 2>/dev/null | grep -qi "MesloLGS Nerd Font"; then
-    info "Downloading Meslo Nerd Font..."
-    if curl -fsSL -o /tmp/Meslo.zip \
-        "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/Meslo.zip"; then
-        unzip -oq /tmp/Meslo.zip -d "$FONT_DIR"
-        rm -f /tmp/Meslo.zip
+# JetBrainsMono Nerd Font isn't packaged for Debian/Ubuntu - fetch it from upstream
+JB_DIR="$FONT_DIR/JetBrainsMonoNerdFont"
+if ! fc-list 2>/dev/null | grep -qi "JetBrainsMono Nerd Font"; then
+    info "Downloading JetBrainsMono Nerd Font..."
+    JB_TMP="$(mktemp -d)"
+    if curl -fL --retry 3 -o "$JB_TMP/JetBrainsMono.zip" \
+        "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip"; then
+        mkdir -p "$JB_DIR"
+        unzip -oq "$JB_TMP/JetBrainsMono.zip" -d "$JB_DIR" -x 'LICENSE*' 'README*' \
+            || warn "Failed to unpack JetBrainsMono Nerd Font archive."
     else
-        warn "Failed to download Meslo Nerd Font. Get it manually from https://www.nerdfonts.com/font-downloads"
+        warn "Failed to download JetBrainsMono Nerd Font. Get JetBrainsMono.zip manually from https://www.nerdfonts.com/font-downloads and unzip it into $JB_DIR"
     fi
+    rm -rf "$JB_TMP"
 fi
 
 if [ -d "$REPO_DIR/config/polybar/fonts" ]; then
     cp -r "$REPO_DIR/config/polybar/fonts/"* "$FONT_DIR/"
 fi
-fc-cache -fv >/dev/null 2>&1
+fc-cache -f >/dev/null 2>&1
+if fc-list 2>/dev/null | grep -qi "JetBrainsMono Nerd Font"; then
+    ok "JetBrainsMono Nerd Font available."
+else
+    warn "JetBrainsMono Nerd Font NOT found by fontconfig - icons in the bar/terminal/rofi will show as boxes."
+fi
 ok "Fonts installed."
 
 # ── Terminal emulator ────────────────────────────────────
@@ -124,8 +145,8 @@ for t in ghostty kitty alacritty; do command -v "$t" &>/dev/null && { terminal="
 if [ -n "$terminal" ]; then
     ok "Terminal already installed: $terminal"
 else
-    info "No supported terminal found — installing ghostty..."
-    install_packages ghostty 2>/dev/null || warn "ghostty not in Debian/Ubuntu repos — install from https://ghostty.org"
+    info "No supported terminal found — installing alacritty..."
+    install_packages alacritty 2>/dev/null || warn "alacritty not in repos — install a terminal manually (SUPER+X expects alacritty)"
 fi
 
 # ── Polybar + XDG dirs + wallpapers ──────────────────────
@@ -159,61 +180,12 @@ else
     ok "SDDM installed and enabled."
 fi
 
-# ── Autostart data-dir fix ────────────────────────────────
-# dwm.c's runautostart() looks for scripts/autostart.sh under
-# ~/.local/share/<dwmdir>/, where <dwmdir> is a string hardcoded in
-# dwm.c. The Makefile, however, syncs the repo to
-# ~/.local/share/dwm-tudor (DATA_DIR). If dwm.c still says
-# dwmdir[] = "dwm-titus" (a leftover from before this repo was renamed
-# from the original dwm-titus fork), dwm looks in a folder that never
-# gets created and silently runs NO autostart programs at all — no
-# picom, no dunst, no nm-applet. This affects Arch too; it's just easy
-# to miss there if a leftover ~/.local/share/dwm-titus/ from an older
-# install happens to still exist.
-if grep -q 'dwmdir\[\] = "dwm-titus"' "$REPO_DIR/dwm.c" 2>/dev/null; then
-    info "Patching dwm.c: autostart data dir 'dwm-titus' -> 'dwm-tudor' (to match Makefile's DATA_DIR)..."
-    sed -i 's/dwmdir\[\] = "dwm-titus"/dwmdir[] = "dwm-tudor"/' "$REPO_DIR/dwm.c"
-    ok "Patched dwm.c."
-else
-    info "dwm.c autostart dir already matches (or string not found) — skipping patch."
-fi
-
-# ── Rofi missing font.rasi fix ────────────────────────────
-# config/rofi/config/general.rasi does `@import "font"`, resolved
-# against ~/.config/rofi/config/font.rasi once installed — but the repo
-# never ships that file. Without it rofi refuses to launch with
-# something like: "Failed to parse ... Path to file '.../config/font.rasi'
-# does not exist." This is a repo bug, not Debian-specific (Arch hits it
-# too, whenever @theme actually resolves down to config/general.rasi),
-# but nothing patches it yet, so create it here if it's missing.
-ROFI_FONT_RASI="$REPO_DIR/config/rofi/config/font.rasi"
-if [ ! -f "$ROFI_FONT_RASI" ]; then
-    info "config/rofi/config/font.rasi is missing — creating it..."
-    cat > "$ROFI_FONT_RASI" <<'EOF'
-/* font.rasi — satisfies `@import "font"` in config/general.rasi */
-* {
-    font: "MesloLGS Nerd Font 12";
-}
-EOF
-    ok "Created config/rofi/config/font.rasi."
-else
-    ok "config/rofi/config/font.rasi already present — skipping."
-fi
-
 # ── Build & Install ──────────────────────────────────────
 cd "$REPO_DIR"
-sudo make clean install
-
-# Belt-and-suspenders: guarantee runautostart() can find
-# scripts/autostart.sh under BOTH names, in case the patch above ever
-# gets out of sync again or you're re-running against an already-built
-# binary.
-DATA_DIR_TUDOR="$HOME/.local/share/dwm-tudor"
-DATA_DIR_TITUS="$HOME/.local/share/dwm-titus"
-if [ -d "$DATA_DIR_TUDOR" ] && [ ! -e "$DATA_DIR_TITUS" ]; then
-    ln -sfn "$DATA_DIR_TUDOR" "$DATA_DIR_TITUS"
-    ok "Linked $DATA_DIR_TITUS -> $DATA_DIR_TUDOR for autostart compatibility."
-fi
+# Build as the normal user (root-owned objects break later rebuilds), install as root.
+make clean
+make
+sudo make install
 
 # Verify Xft/Xinerama actually linked into the binary (config.mk's
 # hardcoded /usr/X11R6 paths are usually harmless no-ops since gcc/ld

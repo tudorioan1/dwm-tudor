@@ -1,5 +1,5 @@
 #!/bin/bash
-# test-install.sh — Integration test for dwm-titus TOML config loading
+# test-install.sh — Integration test for dwm-tudor TOML config loading
 #
 # Simulates a fresh install in an isolated $HOME under /tmp, starts dwm
 # against a headless Xvfb display, and checks whether it loads (or falls
@@ -74,7 +74,7 @@ run_dwm() {
 # ── Seed helper ───────────────────────────────────────────────────────────────
 seed_defaults() {
     local fake_home="$1"
-    local def_dir="$fake_home/.local/share/dwm-titus/config"
+    local def_dir="$fake_home/.local/share/dwm-tudor/config"
     mkdir -p "$def_dir"
     cp "$REPO_DIR/config/hotkeys.toml"      "$def_dir/hotkeys.toml"
     cp "$REPO_DIR/config/themes.toml"       "$def_dir/themes.toml"
@@ -83,7 +83,7 @@ seed_defaults() {
 
 seed_user() {
     local fake_home="$1"
-    local usr_dir="$fake_home/.config/dwm-titus"
+    local usr_dir="$fake_home/.config/dwm-tudor"
     mkdir -p "$usr_dir"
     cp "$REPO_DIR/config/hotkeys.toml"      "$usr_dir/hotkeys.toml"
     cp "$REPO_DIR/config/themes.toml"       "$usr_dir/themes.toml"
@@ -115,7 +115,7 @@ dwm_ran_ok() {
 # ─────────────────────────────────────────────────────────────────────────────
 echo ""
 echo "╔════════════════════════════════════════════╗"
-echo "║   dwm-titus TOML config integration test  ║"
+echo "║   dwm-tudor TOML config integration test  ║"
 echo "╚════════════════════════════════════════════╝"
 echo ""
 log "dwm binary : $DWM_BIN"
@@ -177,9 +177,9 @@ seed_defaults "$FAKE3"
 seed_user     "$FAKE3"
 # Corrupt the user themes file
 printf '[[invalid\nthis is not valid toml ===\n' \
-    > "$FAKE3/.config/dwm-titus/themes.toml"
+    > "$FAKE3/.config/dwm-tudor/themes.toml"
 printf '[[invalid\n' \
-    > "$FAKE3/.config/dwm-titus/hotkeys.toml"
+    > "$FAKE3/.config/dwm-tudor/hotkeys.toml"
 
 LOG3=$(run_dwm "bad-toml" "$FAKE3")
 cat "$LOG3" | head -20

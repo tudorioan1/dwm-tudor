@@ -1,6 +1,6 @@
-# Polybar Configuration (dwm-titus)
+# Polybar Configuration (dwm-tudor)
 
-This directory contains the Polybar status bar configuration bundled with dwm-titus. It is **self-contained** — you do not need to clone any external repos.
+This directory contains the Polybar status bar configuration bundled with dwm-tudor. It is **self-contained** — you do not need to clone any external repos.
 
 ## How It Works
 
@@ -30,14 +30,14 @@ fc-cache -fv
 
 Also install the text font:
 ```bash
-sudo pacman -S ttf-meslo-nerd
+sudo pacman -S ttf-jetbrains-mono-nerd
 ```
 
 > The default text font can be changed in `fonts.ini`.
 
 ### 3. Config Location
 
-When you run `sudo make install` from the dwm-titus root, Polybar configs are copied to:
+When you run `sudo make install` from the dwm-tudor root, Polybar configs are copied to:
 ```
 ~/.config/polybar/
 ```

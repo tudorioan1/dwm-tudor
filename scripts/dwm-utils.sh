@@ -1,6 +1,6 @@
 #!/bin/bash
 # ─────────────────────────────────────────────────────────
-# dwm-utils.sh — Shared utility library for dwm-titus
+# dwm-utils.sh — Shared utility library for dwm-tudor
 # Source this file from other scripts:
 #   source "$(dirname "$0")/dwm-utils.sh"
 # ─────────────────────────────────────────────────────────
@@ -19,6 +19,11 @@ install_packages() {
     # shellcheck disable=SC2086
     $PKG_CMD "$@" >/dev/null
 }
+
+DISTRO_NAME="Linux"
+if [ -r /etc/os-release ]; then
+    DISTRO_NAME="$(. /etc/os-release; echo "${PRETTY_NAME:-Linux}")"
+fi
 
 # ── Hardware Detection ──────────────────────────────────
 
