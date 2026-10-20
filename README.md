@@ -32,7 +32,7 @@ A functional, minimalist and super fast desktop experience based on Suckless' DW
 
 ### Installation
 
-If you install my custom setup on a system where other window manager exists, there might be conflicting files and it could not work well.
+**Important** : If you install my configuration of dwm on a system where other dotfiles were installed, there might be conflicting files and you could encounter issues.
 
 
 Arch :
