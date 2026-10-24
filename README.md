@@ -78,6 +78,12 @@ For changing display resolution or refresh rate, use xrandr.**
 
 Press <kbd>SUPER</kbd> + <kbd>/</kbd> inside dwm for an **interactive keybind viewer** (via rofi).
 
+To modify the keybinds, edit the ``~/.config/dwm-tudor/hotkeys.toml``.
+### Default keybinds (configured for me)
+| Keybind | Action |
+|---------|--------|
+| <kbd>SUPER</kbd> + <kbd>B</kbd> | Open web browser (Brave Origin) |
+
 ### Essential Keybinds
 
 | Keybind | Action |
