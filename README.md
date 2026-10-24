@@ -47,7 +47,8 @@ Debian/Ubuntu :
 ```bash
 git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./install-debian.sh && ./install-debian.sh
 ```
-For quickshell (run this just on Debian/Ubuntu) : ```bash
+For quickshell (run this just on Debian/Ubuntu) : 
+```bash
 sudo apt install qt6-declarative-dev qml6-module-qtqml-models qml6-module-qt-labs-folderlistmodel qml6-module-qtquick-effects
 ```
 ## Important Note : On the Debian installer, you might need to install the quickshell package manually for the wallpaper-picker widget.
