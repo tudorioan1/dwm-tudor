@@ -51,7 +51,6 @@ For quickshell (run this just on Debian/Ubuntu) :
 ```bash
 sudo apt install qt6-declarative-dev qml6-module-qtqml-models qml6-module-qt-labs-folderlistmodel qml6-module-qtquick-effects
 ```
-## Important Note : On the Debian installer, you might need to install the quickshell package manually for the wallpaper-picker widget.
 
 The installers also install **JetBrainsMono Nerd Font** (package `ttf-jetbrains-mono-nerd` on Arch, upstream download on Fedora/Debian). `dwm-session` is installed by `make install`; no manual copy step is needed.
 
