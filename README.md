@@ -47,10 +47,6 @@ Debian/Ubuntu :
 ```bash
 git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./install-debian.sh && ./install-debian.sh
 ```
-For quickshell (run this just on Debian/Ubuntu) : 
-```bash
-sudo apt install qt6-declarative-dev qml6-module-qtqml-models qml6-module-qt-labs-folderlistmodel qml6-module-qtquick-effects
-```
 
 The installers also install **JetBrainsMono Nerd Font** (package `ttf-jetbrains-mono-nerd` on Arch, upstream download on Fedora/Debian). `dwm-session` is installed by `make install`; no manual copy step is needed.
 
