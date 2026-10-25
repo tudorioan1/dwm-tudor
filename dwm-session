@@ -1,0 +1,33 @@
+#!/bin/sh
+# dwm-session — shared entrypoint for both startx (.xinitrc) and a display
+# manager (dwm.desktop). Runs autostart.sh explicitly (instead of relying on
+# dwm's built-in autostart patch, which doesn't fire on every setup) and then
+# execs dwm.
+#
+# Install this file to /usr/local/bin/dwm-session and:
+#   sudo chmod +x /usr/local/bin/dwm-session
+
+# Qt platform theme. theme-apply.sh writes QT_QPA_PLATFORMTHEME to theme-env.sh; load it
+# here so EVERYTHING started from dwm (rofi, qt6ct, Qt apps) inherits it, not only the
+# children of autostart.sh. Without it qt6ct opens with "application is configured
+# incorrectly" (it refuses to run unless QT_QPA_PLATFORMTHEME=qt6ct).
+for _d in dwm-tudor dwm-titus; do
+    _f="${XDG_CONFIG_HOME:-$HOME/.config}/$_d/theme-env.sh"
+    if [ -f "$_f" ]; then . "$_f"; break; fi
+done
+# First login, before theme-apply.sh has written that file: use whichever backend exists
+if [ -z "${QT_QPA_PLATFORMTHEME:-}" ]; then
+    if command -v qt6ct >/dev/null 2>&1; then
+        export QT_QPA_PLATFORMTHEME=qt6ct
+    elif command -v qt5ct >/dev/null 2>&1; then
+        export QT_QPA_PLATFORMTHEME=qt5ct
+    fi
+fi
+
+AUTOSTART="${XDG_DATA_HOME:-$HOME/.local/share}/dwm-tudor/scripts/autostart.sh"
+
+if [ -x "$AUTOSTART" ]; then
+    "$AUTOSTART" &
+fi
+
+exec dwm
