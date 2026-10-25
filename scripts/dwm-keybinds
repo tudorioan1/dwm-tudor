@@ -1,0 +1,129 @@
+#!/bin/bash
+# ─────────────────────────────────────────────────────────
+# dwm-keybinds — keybind cheatsheet (rofi), bound to SUPER+/
+# Reads the live hotkeys.toml, so it always matches what dwm
+# actually uses and works the same on Arch, Debian and Fedora.
+# ─────────────────────────────────────────────────────────
+
+SCRIPT_DIR="$(dirname "$(readlink -f "$0" 2>/dev/null || echo "$0")")"
+
+# First existing file wins: user config → installed copy → repo checkout
+HOTKEYS=""
+for f in \
+    "${XDG_CONFIG_HOME:-$HOME/.config}/dwm-tudor/hotkeys.toml" \
+    "$HOME/.local/share/dwm-tudor/config/hotkeys.toml" \
+    "$SCRIPT_DIR/../config/hotkeys.toml"; do
+    if [ -f "$f" ]; then HOTKEYS="$f"; break; fi
+done
+
+notify() {
+    if command -v notify-send &>/dev/null; then
+        notify-send -a "dwm-keybinds" -u critical "$@" 2>/dev/null || true
+    fi
+}
+
+if ! command -v rofi &>/dev/null; then
+    notify "rofi is not installed"
+    echo "dwm-keybinds: rofi is not installed" >&2
+    exit 1
+fi
+
+if [ -z "$HOTKEYS" ]; then
+    notify "hotkeys.toml not found" "Expected ~/.config/dwm-tudor/hotkeys.toml"
+    rofi -e "hotkeys.toml not found (expected ~/.config/dwm-tudor/hotkeys.toml)"
+    exit 1
+fi
+
+# Parse hotkeys.toml with plain POSIX awk (Debian's default awk is mawk, not gawk).
+#   • "# ── Section ──" comments inside keys = [ ... ] become section headers
+#   • { mod="..", key="..", desc=".." } lines become rows
+#   • tag_keys = [ ... ] is summarised as four rows (1..9 view / toggle / send / also show)
+parse_bindings() {
+    awk '
+    function val(line, name,    pat, s) {
+        pat = name "=\"[^\"]*\""
+        if (match(line, pat)) {
+            s = substr(line, RSTART + length(name) + 2, RLENGTH - length(name) - 3)
+            return s
+        }
+        return ""
+    }
+    function esc(s) {
+        gsub(/&/, "\\&amp;", s)
+        gsub(/</, "\\&lt;", s)
+        gsub(/>/, "\\&gt;", s)
+        return s
+    }
+    function prettykey(k) {
+        if (k == "slash")         return "/"
+        if (k == "comma")         return ","
+        if (k == "period")        return "."
+        if (k == "semicolon")     return ";"
+        if (k == "minus")         return "-"
+        if (k == "equal")         return "="
+        if (k == "grave")         return "`"
+        if (k == "bracket_left")  return "["
+        if (k == "bracket_right") return "]"
+        if (k == "space")         return "Space"
+        if (length(k) == 1)       return toupper(k)
+        return k
+    }
+    function combo(mod, key,    n, parts, i, out) {
+        out = ""
+        n = split(mod, parts, " ")
+        for (i = 1; i <= n; i++) if (parts[i] != "") out = out parts[i] " + "
+        return out prettykey(key)
+    }
+    function row(k, d) {
+        printf "<b>%s</b>  <i>%s</i>\n", esc(k), esc(d)
+    }
+    BEGIN { in_keys = 0; in_tags = 0; ntags = 0 }
+
+    /^keys[ \t]*=[ \t]*\[/      { in_keys = 1; next }
+    /^tag_keys[ \t]*=[ \t]*\[/  { in_tags = 1; next }
+    /^\][ \t]*$/                { in_keys = 0; in_tags = 0; next }
+
+    in_keys && /^[ \t]*# ── / {
+        t = $0
+        sub(/^[ \t]*# ── /, "", t)
+        i = index(t, " ──")
+        if (i > 0) t = substr(t, 1, i - 1)
+        gsub(/[ \t]+$/, "", t)
+        if (t != "") printf "  ── %s\n", esc(t)
+        next
+    }
+    in_keys && /^[ \t]*\{/ {
+        key = val($0, "key")
+        if (key == "") next
+        desc = val($0, "desc")
+        if (desc == "") desc = val($0, "func")
+        row(combo(val($0, "mod"), key), desc)
+        next
+    }
+    in_tags && /^[ \t]*\{/ {
+        key = val($0, "key")
+        if (key != "") { ntags++; if (ntags == 1) first = key; last = key }
+        next
+    }
+    END {
+        if (ntags > 0) {
+            rng = first "…" last
+            printf "  ── Tags\n"
+            row("SUPER + " rng,                    "View tag")
+            row("SUPER + CTRL + " rng,             "Show tag alongside current")
+            row("SUPER + SHIFT + " rng,            "Send window to tag")
+            row("SUPER + CTRL + SHIFT + " rng,     "Also show window on tag")
+        }
+    }
+    ' "$HOTKEYS"
+}
+
+BINDINGS="$(parse_bindings)"
+
+if [ -z "$BINDINGS" ]; then
+    notify "No keybindings found" "$HOTKEYS"
+    rofi -e "No keybindings found in $HOTKEYS"
+    exit 1
+fi
+
+printf '%s\n' "$BINDINGS" | rofi -dmenu -i -markup-rows -no-custom -p "Keybinds:" -mesg "$HOTKEYS" >/dev/null || true
