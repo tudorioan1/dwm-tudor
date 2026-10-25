@@ -90,6 +90,7 @@ To modify the keybinds, edit the ``~/.config/dwm-tudor/hotkeys.toml``.
 |---------|--------|
 | <kbd>SUPER</kbd> + <kbd>X</kbd> | Open terminal |
 | <kbd>SUPER</kbd> + <kbd>R</kbd> | Launch rofi (App Launcher) |
+| <kbd>SUPER</kbd> + <kbd>F1</kbd> | Launch dwm control center |
 | <kbd>SUPER</kbd> + <kbd>Q</kbd> | Close window |
 | <kbd>SUPER</kbd> + <kbd>J</kbd> / <kbd>K</kbd> | Focus next / previous window |
 | <kbd>SUPER</kbd> + <kbd>H</kbd> / <kbd>L</kbd> | Resize master area |
