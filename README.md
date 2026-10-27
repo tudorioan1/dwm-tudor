@@ -89,7 +89,7 @@ To modify the keybinds, edit `~/.config/dwm-tudor/hotkeys.toml` (hot-reloading, 
 | <kbd>SUPER</kbd> + <kbd>Q</kbd> | Close window |
 | <kbd>SUPER</kbd> + <kbd>J</kbd> / <kbd>K</kbd> | Focus next / previous window |
 | <kbd>SUPER</kbd> + <kbd>H</kbd> / <kbd>L</kbd> | Resize master area |
-| <kbd>SUPER</kbd> + <kbd>1-9</kbd> | Switch to tag (workspace) |
+| <kbd>SUPER</kbd> + <kbd>1-5</kbd> | Switch to tag (workspace) |
 | <kbd>SUPER</kbd> + <kbd>Shift</kbd> + <kbd>1-9</kbd> | Move window to tag |
 | <kbd>SUPER</kbd> + <kbd>T</kbd> / <kbd>F</kbd> / <kbd>M</kbd> | Tile layout / Float layout / Fullscreen |
 | <kbd>SUPER</kbd> + <kbd>Space</kbd> | Toggle floating |
