@@ -1,6 +1,6 @@
 #!/bin/bash
 # ─────────────────────────────────────────────────────────
-# dwm-tudor dependency checker — Arch Linux & Fedora
+# dwm-tudor dependency checker — Arch Linux, Debian/Ubuntu & Fedora
 # Run before building to verify all required packages
 # are installed. Exit code 0 = all good, 1 = missing deps.
 # ─────────────────────────────────────────────────────────
@@ -21,14 +21,19 @@ detect_distro() {
                 echo "arch"; return ;;
             fedora|rhel|centos|rocky|almalinux|nobara)
                 echo "fedora"; return ;;
+            debian|ubuntu|linuxmint|pop|raspbian|kali|zorin|elementary|neon)
+                echo "debian"; return ;;
         esac
         case "$ID_LIKE" in
             *arch*) echo "arch"; return ;;
             *fedora*|*rhel*) echo "fedora"; return ;;
+            *debian*|*ubuntu*) echo "debian"; return ;;
         esac
     fi
     if command -v pacman &>/dev/null; then
         echo "arch"; return
+    elif command -v apt-get &>/dev/null || command -v dpkg &>/dev/null; then
+        echo "debian"; return
     elif command -v dnf &>/dev/null || command -v rpm &>/dev/null; then
         echo "fedora"; return
     fi
@@ -38,7 +43,7 @@ detect_distro() {
 DISTRO=$(detect_distro)
 
 if [ "$DISTRO" = "unknown" ]; then
-    printf "${RED}Unsupported distribution.${NC} This script supports Arch Linux and Fedora only.\n"
+    printf "${RED}Unsupported distribution.${NC} This script supports Arch Linux, Debian/Ubuntu and Fedora only.\n"
     exit 1
 fi
 
@@ -52,6 +57,16 @@ declare -A PKG_ARCH=(
     [xcb-util]="xcb-util"
     [freetype2]="freetype2"
     [fontconfig]="fontconfig"
+)
+declare -A PKG_DEBIAN=(
+    [libx11]="libx11-dev"
+    [libxft]="libxft-dev"
+    [libxinerama]="libxinerama-dev"
+    [imlib2]="libimlib2-dev"
+    [libxcb]="libxcb1-dev"
+    [xcb-util]="libxcb-util-dev"
+    [freetype2]="libfreetype-dev|libfreetype6-dev"
+    [fontconfig]="libfontconfig-dev|libfontconfig1-dev"
 )
 declare -A PKG_FEDORA=(
     [libx11]="libX11-devel"
@@ -73,23 +88,28 @@ check_cmd() {
     fi
 }
 
-# check_pkg: verify an actual (distro-specific) package name is installed
+# pkg_installed: is this exact package installed on the running distro?
+pkg_installed() {
+    case "$DISTRO" in
+        arch)   pacman -Qi "$1" &>/dev/null ;;
+        debian) [[ "$(dpkg-query -W -f='${Status}' "$1" 2>/dev/null)" == "install ok installed" ]] ;;
+        *)      rpm -q "$1" &>/dev/null ;;
+    esac
+}
+
+# check_pkg: verify an actual (distro-specific) package name is installed.
+# "a|b" = alternative package names (any one installed counts).
 check_pkg() {
-    local pkg="$1"
-    if [ "$DISTRO" = "arch" ]; then
-        if pacman -Qi "$pkg" &>/dev/null; then
-            printf "  ${GREEN}✓${NC} %s\n" "$pkg"
-        else
-            printf "  ${RED}✗${NC} %s ${YELLOW}(not installed)${NC}\n" "$pkg"
-            MISSING=$((MISSING + 1))
-        fi
+    local spec="$1" alt found="" alts
+    IFS='|' read -ra alts <<<"$spec"
+    for alt in "${alts[@]}"; do
+        if pkg_installed "$alt"; then found="$alt"; break; fi
+    done
+    if [ -n "$found" ]; then
+        printf "  ${GREEN}✓${NC} %s\n" "$found"
     else
-        if rpm -q "$pkg" &>/dev/null; then
-            printf "  ${GREEN}✓${NC} %s\n" "$pkg"
-        else
-            printf "  ${RED}✗${NC} %s ${YELLOW}(not installed)${NC}\n" "$pkg"
-            MISSING=$((MISSING + 1))
-        fi
+        printf "  ${RED}✗${NC} %s ${YELLOW}(not installed)${NC}\n" "${alts[0]}"
+        MISSING=$((MISSING + 1))
     fi
 }
 
@@ -98,11 +118,11 @@ check_pkg() {
 check_dep() {
     local generic="$1"
     local pkg
-    if [ "$DISTRO" = "arch" ]; then
-        pkg="${PKG_ARCH[$generic]:-$generic}"
-    else
-        pkg="${PKG_FEDORA[$generic]:-$generic}"
-    fi
+    case "$DISTRO" in
+        arch)   pkg="${PKG_ARCH[$generic]:-$generic}" ;;
+        debian) pkg="${PKG_DEBIAN[$generic]:-$generic}" ;;
+        *)      pkg="${PKG_FEDORA[$generic]:-$generic}" ;;
+    esac
     check_pkg "$pkg"
 }
 
@@ -112,6 +132,13 @@ check_base_devel() {
             printf "  ${GREEN}✓${NC} base-devel\n"
         else
             printf "  ${RED}✗${NC} base-devel ${YELLOW}(not installed)${NC}\n"
+            MISSING=$((MISSING + 1))
+        fi
+    elif [ "$DISTRO" = "debian" ]; then
+        if pkg_installed build-essential; then
+            printf "  ${GREEN}✓${NC} build-essential\n"
+        else
+            printf "  ${RED}✗${NC} build-essential ${YELLOW}(not installed)${NC}\n"
             MISSING=$((MISSING + 1))
         fi
     else
@@ -134,11 +161,11 @@ check_font() {
 }
 
 echo ""
-if [ "$DISTRO" = "arch" ]; then
-    echo "═══ dwm-tudor Dependency Check (Arch Linux) ═══"
-else
-    echo "═══ dwm-tudor Dependency Check (Fedora) ═══"
-fi
+case "$DISTRO" in
+    arch)   echo "═══ dwm-tudor Dependency Check (Arch Linux) ═══" ;;
+    debian) echo "═══ dwm-tudor Dependency Check (Debian/Ubuntu) ═══" ;;
+    *)      echo "═══ dwm-tudor Dependency Check (Fedora) ═══" ;;
+esac
 echo ""
 
 # ── Build dependencies ──────────────────────────────────
@@ -147,6 +174,11 @@ check_base_devel
 for dep in libx11 libxft libxinerama imlib2 libxcb xcb-util freetype2 fontconfig; do
     check_dep "$dep"
 done
+if [ "$DISTRO" = "debian" ]; then
+    # Debian splits these out of libx11-dev / libxcb1-dev (Xlib-xcb.h, xcb/res.h)
+    check_pkg "libx11-xcb-dev"
+    check_pkg "libxcb-res0-dev"
+fi
 check_cmd "cc"
 check_cmd "make"
 echo ""
@@ -168,6 +200,24 @@ if [ "$DISTRO" = "arch" ]; then
     for pkg in xorg-xinit xorg-xrandr xorg-xset xorg-xsetroot; do
         check_pkg "$pkg"
     done
+elif [ "$DISTRO" = "debian" ]; then
+    # Accept either Xorg or Xlibre as the X server (Xlibre = any installed xlibre* package)
+    xlibre_pkg=$(dpkg-query -W -f='${Package}\n' 2>/dev/null | grep '^xlibre' | head -1)
+    if [ -n "$xlibre_pkg" ]; then
+        printf "  ${GREEN}✓${NC} Xlibre detected (%s)\n" "$xlibre_pkg"
+    elif pkg_installed xserver-xorg-core; then
+        printf "  ${GREEN}✓${NC} xserver-xorg-core\n"
+    elif command -v Xorg &>/dev/null; then
+        printf "  ${GREEN}✓${NC} Xorg binary found\n"
+    else
+        printf "  ${RED}✗${NC} xserver-xorg or xlibre ${YELLOW}(not installed)${NC}\n"
+        MISSING=$((MISSING + 1))
+    fi
+    # xinit provides startx; x11-xserver-utils provides xrandr/xset/xsetroot
+    check_cmd "startx"
+    check_cmd "xrandr"
+    check_cmd "xset"
+    check_cmd "xsetroot"
 else
     # Fedora: Xlibre isn't packaged upstream, but check for it just in case
     # someone built/installed it manually. xrandr/xset/xsetroot ship together
@@ -241,11 +291,11 @@ fi
 echo ""
 
 # ── Summary ─────────────────────────────────────────────
-if [ "$DISTRO" = "arch" ]; then
-    INSTALL_HINT="sudo pacman -S <package>"
-else
-    INSTALL_HINT="sudo dnf install <package>"
-fi
+case "$DISTRO" in
+    arch)   INSTALL_HINT="sudo pacman -S <package>"; INSTALLER="./install-arch.sh" ;;
+    debian) INSTALL_HINT="sudo apt install <package>"; INSTALLER="./install-debian.sh" ;;
+    *)      INSTALL_HINT="sudo dnf install <package>"; INSTALLER="./install-fedora.sh" ;;
+esac
 
 if [ $MISSING -eq 0 ]; then
     printf "${GREEN}All dependencies satisfied. Ready to build!${NC}\n"
@@ -254,7 +304,7 @@ if [ $MISSING -eq 0 ]; then
 else
     printf "${RED}$MISSING missing dependency/dependencies.${NC}\n"
     echo "  Install missing packages with: $INSTALL_HINT"
-    echo "  Or run: ./install.sh   (automated install)"
+    echo "  Or run: $INSTALLER   (automated install)"
     exit 1
 fi
 echo ""
