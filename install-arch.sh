@@ -64,6 +64,11 @@ if fc-list 2>/dev/null | grep -qi "JetBrainsMono Nerd Font"; then
 else
     warn "JetBrainsMono Nerd Font NOT found by fontconfig - icons in the bar/terminal/rofi will show as boxes."
 fi
+if fc-list 2>/dev/null | grep -qi "MesloLGS Nerd Font Mono"; then
+    ok "MesloLGS Nerd Font Mono available."
+else
+    warn "MesloLGS Nerd Font Mono NOT found by fontconfig."
+fi
 ok "Fonts installed."
 
 # ── Terminal emulator ────────────────────────────────────
