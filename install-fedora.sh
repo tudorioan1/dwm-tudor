@@ -24,16 +24,67 @@ else
     DISTRO_NAME="Fedora/RHEL"
 fi
 
+# Packages that could not be installed; listed in a summary at the end of the run.
+FAILED_PKGS=()
+
 # Install a batch; if dnf rejects the batch because ONE package is unknown, retry one
 # by one so a single missing package no longer aborts the whole install.
+# Returns non-zero if anything failed, and remembers what in FAILED_PKGS.
 install_packages() {
     sudo dnf install -y "$@" && return 0
+    if [ "$#" -eq 1 ]; then
+        warn "Could not install: $1"
+        FAILED_PKGS+=("$1")
+        return 1
+    fi
     warn "Batch install failed - retrying package by package..."
     local p rc=0
     for p in "$@"; do
-        sudo dnf install -y "$p" || { warn "Could not install: $p"; rc=1; }
+        sudo dnf install -y "$p" || { warn "Could not install: $p"; FAILED_PKGS+=("$p"); rc=1; }
     done
     return $rc
+}
+
+# try_install <pkg>...: quiet attempt with no bookkeeping, for "official repo first,
+# then somewhere else" fallbacks.
+try_install() { sudo dnf install -y "$@" 2>/dev/null; }
+
+# install_any <pkg> [<alternative>...]: install the first one that works (e.g. qt6ct, else
+# qt5ct). Only counts as a failure if none of them can be installed.
+install_any() {
+    local p
+    for p in "$@"; do
+        if sudo dnf install -y "$p" 2>/dev/null; then return 0; fi
+    done
+    warn "Could not install any of: $*"
+    FAILED_PKGS+=("$1")
+    return 1
+}
+
+# confirm "<question>": yes by default. Without a terminal (piped / unattended run) the
+# answer is no, so nothing third-party is ever added silently.
+confirm() {
+    [ -t 0 ] || return 1
+    local reply
+    read -r -p "$1 [Y/n] " reply
+    case "$reply" in [nN]*) return 1 ;; *) return 0 ;; esac
+}
+
+# install_from_copr <copr> <pkg>...: enable a third-party COPR (after asking) and install from it.
+install_from_copr() {
+    local copr="$1"; shift
+    if ! confirm "Enable the third-party COPR '$copr' to install: $*?"; then
+        warn "Skipped: $*  (enable it later with: sudo dnf copr enable $copr)"
+        FAILED_PKGS+=("$@")
+        return 1
+    fi
+    install_any dnf5-plugins dnf-plugins-core >/dev/null || true   # provides `dnf copr`
+    if ! sudo dnf -y copr enable "$copr"; then
+        warn "Could not enable COPR $copr (not available for this Fedora release?)."
+        FAILED_PKGS+=("$@")
+        return 1
+    fi
+    install_packages "$@" && ok "Installed from COPR $copr: $*"
 }
 
 BG_DIR="$HOME/Pictures/backgrounds"
@@ -62,15 +113,19 @@ ok "Build dependencies installed."
 
 # ── Runtime dependencies ─────────────────────────────────
 info "Installing runtime dependencies..."
-install_packages rofi picom dunst feh flameshot papirus-icon-theme dex-autostart mate-polkit alsa-utils git curl unzip xclip \
+if install_packages rofi picom dunst feh flameshot papirus-icon-theme dex-autostart mate-polkit alsa-utils git curl unzip xclip \
     xprop thunar gvfs tumbler thunar-archive-plugin xdg-user-dirs \
     xdg-desktop-portal-gtk pipewire pavucontrol gnome-keyring NetworkManager network-manager-applet \
-    libnotify rsync xdotool setxkbmap || true
-ok "Runtime dependencies installed."
+    libnotify rsync xdotool setxkbmap
+then
+    ok "Runtime dependencies installed."
+else
+    warn "Some runtime dependencies could not be installed (listed at the end)."
+fi
 
-# quickshell is only in Fedora Rawhide / a COPR - needed for the wallpaper picker only
-install_packages quickshell 2>/dev/null \
-    || warn "quickshell not in your Fedora repos - wallpaper picker disabled. Optional COPR: sudo dnf copr enable errornointernet/quickshell && sudo dnf install quickshell"
+# quickshell (wallpaper picker): official repos first (Rawhide / newer releases), then the
+# COPR that upstream recommends for Fedora. Qt QML modules come with qt6-qtdeclarative.
+try_install quickshell || install_from_copr errornointernet/quickshell quickshell || true
 
 # Fedora's dex-autostart package ships the binary as `dex-autostart`,
 # not `dex` (Arch's `dex` package ships `dex`). Anything in this repo's
@@ -85,17 +140,33 @@ if command -v dex-autostart &>/dev/null && ! command -v dex &>/dev/null; then
 fi
 
 # nwg-look isn't in the official Fedora repos — needs a COPR
-install_packages nwg-look 2>/dev/null \
-    || warn "nwg-look not in Fedora repos — install via: sudo dnf copr enable tofik/nwg-shell && sudo dnf install nwg-look"
+try_install nwg-look || install_from_copr tofik/nwg-shell nwg-look || true
 
 # ── Qt / GTK theming ─────────────────────────────────────
 info "Installing Qt/GTK dark-mode dependencies..."
 # dconf: required for gsettings to persist GTK color-scheme changes
 # qt6ct / qt5ct: QT_QPA_PLATFORMTHEME backend for Qt dark mode in standalone WMs
 install_packages dconf
-install_packages qt6ct 2>/dev/null || install_packages qt5ct 2>/dev/null \
-    || warn "Neither qt6ct nor qt5ct found in repos — Qt apps may not respect dark mode."
+install_any qt6ct qt5ct || warn "Qt apps may not respect dark mode."
 ok "Qt/GTK theming dependencies installed."
+
+# fetch_nerd_font <zip name> <target dir> <unzip pattern> <fontconfig family>
+# Downloads a Nerd Fonts release asset and unpacks only the files matching <pattern>.
+fetch_nerd_font() {
+    local zip="$1" dir="$2" pattern="$3" family="$4" tmp
+    if fc-list 2>/dev/null | grep -qi "$family"; then return 0; fi
+    info "Downloading $family..."
+    tmp="$(mktemp -d)"
+    if curl -fL --retry 3 -o "$tmp/$zip" \
+        "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/$zip"; then
+        mkdir -p "$dir"
+        unzip -oqj "$tmp/$zip" "$pattern" -d "$dir" \
+            || warn "Failed to unpack $family from $zip."
+    else
+        warn "Failed to download $family. Get $zip manually from https://www.nerdfonts.com/font-downloads and unzip $pattern into $dir"
+    fi
+    rm -rf "$tmp"
+}
 
 # ── Fonts ────────────────────────────────────────────────
 info "Installing fonts..."
@@ -118,6 +189,10 @@ if ! fc-list 2>/dev/null | grep -qi "JetBrainsMono Nerd Font"; then
     rm -rf "$JB_TMP"
 fi
 
+# MesloLGS Nerd Font Mono isn't packaged for Fedora either - fetch only the Mono family
+# (S = small line spacing) instead of unpacking the whole Meslo archive
+fetch_nerd_font Meslo.zip "$FONT_DIR/MesloLGSNerdFontMono" '*MesloLGSNerdFontMono-*.ttf' "MesloLGS Nerd Font Mono"
+
 if [ -d "$REPO_DIR/config/polybar/fonts" ]; then
     cp -r "$REPO_DIR/config/polybar/fonts/"* "$FONT_DIR/"
 fi
@@ -126,6 +201,11 @@ if fc-list 2>/dev/null | grep -qi "JetBrainsMono Nerd Font"; then
     ok "JetBrainsMono Nerd Font available."
 else
     warn "JetBrainsMono Nerd Font NOT found by fontconfig - icons in the bar/terminal/rofi will show as boxes."
+fi
+if fc-list 2>/dev/null | grep -qi "MesloLGS Nerd Font Mono"; then
+    ok "MesloLGS Nerd Font Mono available."
+else
+    warn "MesloLGS Nerd Font Mono NOT found by fontconfig."
 fi
 ok "Fonts installed."
 
@@ -194,6 +274,14 @@ if [ -f "$REPO_DIR/dwm" ]; then
     fi
 fi
 
+# ── Anything that failed to install? ─────────────────────
+if [ "${#FAILED_PKGS[@]}" -gt 0 ]; then
+    echo ""
+    warn "dwm is installed, but these packages could not be installed:"
+    printf '    - %s\n' "${FAILED_PKGS[@]}"
+    warn "See the warnings above for how to get them, then re-run this script if you like."
+fi
+
 # ── Done ─────────────────────────────────────────────────
 echo ""
 echo "╔═══════════════════════════════════════════╗"
@@ -208,5 +296,5 @@ echo "  SUPER+/   keybind viewer     SUPER+X  terminal"
 echo "  SUPER+F1  control center     SUPER+R  app launcher (rofi)"
 echo "  SUPER+Q   close window"
 echo ""
-echo "  Full reference: docs/src/keybinds.md or SUPER+/ in dwm"
+echo "  Full keybind reference: press SUPER+/ in dwm (reads ~/.config/dwm-tudor/hotkeys.toml)"
 echo ""
