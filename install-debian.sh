@@ -24,18 +24,42 @@ else
     DISTRO_NAME="Debian/Ubuntu"
 fi
 
-export DEBIAN_FRONTEND=noninteractive
+# apt-get as root, non-interactive. DEBIAN_FRONTEND is passed through `env` because sudo
+# resets the environment: a plain `export` never reaches apt, so debconf could still ask
+# questions (e.g. which display manager to use when SDDM is installed).
+apt_get() { sudo env DEBIAN_FRONTEND=noninteractive apt-get "$@"; }
+
+# Packages that could not be installed; listed in a summary at the end of the run.
+FAILED_PKGS=()
 
 # Install a batch; if apt rejects the batch because ONE package is unknown, retry one
 # by one so a single missing package no longer aborts the whole install.
+# Returns non-zero if anything failed, and remembers what in FAILED_PKGS.
 install_packages() {
-    sudo apt-get install -y "$@" && return 0
+    apt_get install -y "$@" && return 0
+    if [ "$#" -eq 1 ]; then
+        warn "Could not install: $1"
+        FAILED_PKGS+=("$1")
+        return 1
+    fi
     warn "Batch install failed - retrying package by package..."
     local p rc=0
     for p in "$@"; do
-        sudo apt-get install -y "$p" || { warn "Could not install: $p"; rc=1; }
+        apt_get install -y "$p" || { warn "Could not install: $p"; FAILED_PKGS+=("$p"); rc=1; }
     done
     return $rc
+}
+
+# install_any <pkg> [<alternative>...]: install the first one that works. For packages that
+# were renamed between releases; only counts as a failure if none of them can be installed.
+install_any() {
+    local p
+    for p in "$@"; do
+        if apt_get install -y "$p" 2>/dev/null; then return 0; fi
+    done
+    warn "Could not install any of: $*"
+    FAILED_PKGS+=("$1")
+    return 1
 }
 
 BG_DIR="$HOME/Pictures/backgrounds"
@@ -52,7 +76,7 @@ info "Package manager: $PKG_CMD"
 # Unlike pacman/dnf, apt needs an explicit metadata refresh or a fresh
 # system will 404 on half the packages below.
 info "Updating package lists..."
-sudo apt-get update -qq
+apt_get update -qq
 ok "Package lists updated."
 
 # ── Build dependencies ───────────────────────────────────
@@ -67,11 +91,10 @@ install_packages build-essential pkg-config \
 # dev packages, and without them the build fails with "Xlib-xcb.h: No
 # such file or directory" / "xcb/res.h: No such file or directory".
 install_packages libx11-xcb-dev libxcb-res0-dev
-# freetype's dev package was renamed from libfreetype6-dev to
-# libfreetype-dev at different points across Debian/Ubuntu releases —
-# try the current name first, fall back to the old transitional one.
-install_packages libfreetype-dev 2>/dev/null || install_packages libfreetype6-dev
-install_packages libfontconfig1-dev 2>/dev/null || true
+# freetype's and fontconfig's dev packages were renamed at different points across
+# Debian/Ubuntu releases — try the current name first, fall back to the old one.
+install_any libfreetype-dev libfreetype6-dev
+install_any libfontconfig-dev libfontconfig1-dev
 
 if dpkg -l 2>/dev/null | grep -qi '^ii.*xlibre'; then
     info "Xlibre detected — skipping xserver-xorg."
@@ -83,11 +106,15 @@ ok "Build dependencies installed."
 
 # ── Runtime dependencies ─────────────────────────────────
 info "Installing runtime dependencies..."
-install_packages rofi picom dunst feh flameshot dex papirus-icon-theme mate-polkit alsa-utils git curl unzip xclip \
+if install_packages rofi picom dunst feh flameshot dex papirus-icon-theme mate-polkit alsa-utils git curl unzip xclip \
     thunar gvfs tumbler thunar-archive-plugin xdg-user-dirs \
     xdg-desktop-portal-gtk pipewire pavucontrol gnome-keyring network-manager network-manager-gnome \
-    libnotify-bin rsync xdotool x11-xkb-utils || true
-ok "Runtime dependencies installed."
+    libnotify-bin rsync xdotool x11-xkb-utils
+then
+    ok "Runtime dependencies installed."
+else
+    warn "Some runtime dependencies could not be installed (listed at the end)."
+fi
 
 # ── Quickshell (wallpaper picker) ────────────────────────
 # config/quickshell/wallpaper-picker is a Quickshell QML app. Debian splits the Qt QML
@@ -111,7 +138,9 @@ install_quickshell() {
 
     # 1) Already visible to apt (Debian 14/forky, sid, Ubuntu 26.10+)?
     if apt-cache policy quickshell 2>/dev/null | grep -q 'Candidate: [^(]'; then
-        if install_packages quickshell; then ok "quickshell installed."; return 0; fi
+        if apt_get install -y quickshell; then ok "quickshell installed."; return 0; fi
+        FAILED_PKGS+=("quickshell")
+        return 1
     fi
 
     # 2) Debian 13 (trixie, or a derivative based on it): enable trixie-backports
@@ -126,14 +155,15 @@ Suites: trixie-backports
 Components: main
 Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 EOF
-            sudo apt-get update -qq || warn "apt update failed after adding trixie-backports."
+            apt_get update -qq || warn "apt update failed after adding trixie-backports."
         fi
         # backports are NotAutomatic: they must be requested explicitly with -t
-        if sudo apt-get install -y -t trixie-backports quickshell; then
+        if apt_get install -y -t trixie-backports quickshell; then
             ok "quickshell installed from trixie-backports."
             return 0
         fi
         warn "Could not install quickshell from trixie-backports."
+        FAILED_PKGS+=("quickshell")
         return 1
     fi
 
@@ -148,9 +178,10 @@ EOF
             warn "Install instructions: https://quickshell.org/docs/guide/install-setup"
             ;;
     esac
+    FAILED_PKGS+=("quickshell")
     return 1
 }
-install_quickshell || true
+install_quickshell || true   # failure is already reported and recorded in FAILED_PKGS
 
 # nwg-look isn't packaged for Debian/Ubuntu — no clean apt/PPA equivalent
 install_packages nwg-look 2>/dev/null \
@@ -161,9 +192,26 @@ info "Installing Qt/GTK dark-mode dependencies..."
 # dconf-gsettings-backend: required for gsettings to persist GTK color-scheme changes
 # qt6ct / qt5ct: QT_QPA_PLATFORMTHEME backend for Qt dark mode in standalone WMs
 install_packages dconf-cli dconf-gsettings-backend
-install_packages qt6ct 2>/dev/null || install_packages qt5ct 2>/dev/null \
-    || warn "Neither qt6ct nor qt5ct found in repos — Qt apps may not respect dark mode."
+install_any qt6ct qt5ct || warn "Qt apps may not respect dark mode."
 ok "Qt/GTK theming dependencies installed."
+
+# fetch_nerd_font <zip name> <target dir> <unzip pattern> <fontconfig family>
+# Downloads a Nerd Fonts release asset and unpacks only the files matching <pattern>.
+fetch_nerd_font() {
+    local zip="$1" dir="$2" pattern="$3" family="$4" tmp
+    if fc-list 2>/dev/null | grep -qi "$family"; then return 0; fi
+    info "Downloading $family..."
+    tmp="$(mktemp -d)"
+    if curl -fL --retry 3 -o "$tmp/$zip" \
+        "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/$zip"; then
+        mkdir -p "$dir"
+        unzip -oqj "$tmp/$zip" "$pattern" -d "$dir" \
+            || warn "Failed to unpack $family from $zip."
+    else
+        warn "Failed to download $family. Get $zip manually from https://www.nerdfonts.com/font-downloads and unzip $pattern into $dir"
+    fi
+    rm -rf "$tmp"
+}
 
 # ── Fonts ────────────────────────────────────────────────
 info "Installing fonts..."
@@ -186,6 +234,10 @@ if ! fc-list 2>/dev/null | grep -qi "JetBrainsMono Nerd Font"; then
     rm -rf "$JB_TMP"
 fi
 
+# MesloLGS Nerd Font Mono isn't packaged for Debian/Ubuntu either - fetch only the Mono family
+# (S = small line spacing) instead of unpacking the whole Meslo archive
+fetch_nerd_font Meslo.zip "$FONT_DIR/MesloLGSNerdFontMono" '*MesloLGSNerdFontMono-*.ttf' "MesloLGS Nerd Font Mono"
+
 if [ -d "$REPO_DIR/config/polybar/fonts" ]; then
     cp -r "$REPO_DIR/config/polybar/fonts/"* "$FONT_DIR/"
 fi
@@ -194,6 +246,11 @@ if fc-list 2>/dev/null | grep -qi "JetBrainsMono Nerd Font"; then
     ok "JetBrainsMono Nerd Font available."
 else
     warn "JetBrainsMono Nerd Font NOT found by fontconfig - icons in the bar/terminal/rofi will show as boxes."
+fi
+if fc-list 2>/dev/null | grep -qi "MesloLGS Nerd Font Mono"; then
+    ok "MesloLGS Nerd Font Mono available."
+else
+    warn "MesloLGS Nerd Font Mono NOT found by fontconfig."
 fi
 ok "Fonts installed."
 
@@ -227,8 +284,17 @@ fi
 
 # ── Display manager ──────────────────────────────────────
 # Debian/Ubuntu's GDM package/binary is "gdm3", not "gdm" — check both.
+# lightdm and gdm3 live in /usr/sbin, which is NOT in a normal user's PATH on Debian, so a
+# plain `command -v` misses them and the script would install SDDM and try to enable it on
+# top of the user's existing display manager. Look in the sbin dirs too, and honour an
+# already-enabled display-manager.service.
 currentdm=""
-for dm in sddm lightdm gdm3 gdm; do command -v "$dm" &>/dev/null && { currentdm="$dm"; break; }; done
+for dm in sddm lightdm gdm3 gdm; do
+    if PATH="$PATH:/usr/sbin:/sbin" command -v "$dm" &>/dev/null; then currentdm="$dm"; break; fi
+done
+if [ -z "$currentdm" ] && [ -e /etc/systemd/system/display-manager.service ]; then
+    currentdm="$(basename "$(readlink -f /etc/systemd/system/display-manager.service)" .service)"
+fi
 
 if [ -n "$currentdm" ]; then
     ok "Display manager already installed: $currentdm"
@@ -262,6 +328,14 @@ if [ -f "$REPO_DIR/dwm" ]; then
     else
         warn "libXinerama NOT found in 'ldd dwm' output — multi-monitor support may be missing."
     fi
+fi
+
+# ── Anything that failed to install? ─────────────────────
+if [ "${#FAILED_PKGS[@]}" -gt 0 ]; then
+    echo ""
+    warn "dwm is installed, but these packages could not be installed:"
+    printf '    - %s\n' "${FAILED_PKGS[@]}"
+    warn "See the warnings above for how to get them, then re-run this script if you like."
 fi
 
 # ── Done ─────────────────────────────────────────────────
