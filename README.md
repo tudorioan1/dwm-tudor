@@ -9,7 +9,7 @@
 ---
 > **Note:** This is a personal project and still a work in progress. It is built around my own workflow and assumes some familiarity with Linux and window managers, so a little troubleshooting after installing is to be expected.
 
-  A functional, minimalist and super fast desktop experience based on Suckless' DWM, that was heavily modified for my needs. It includes numerous patches and customizations for a productive workflow on **Arch Linux, Fedora and Debian/Ubuntu** with X11 (Wayland is not supported).
+A functional, minimalist and super fast desktop experience based on Suckless' DWM, that was heavily modified for my needs. It includes numerous patches and customizations for a productive workflow on **Arch Linux, Fedora and Debian/Ubuntu** with X11 (Wayland is not supported).
 <img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/2be9d3ef-42b2-4880-bb91-13344ad5b626" />
 
 ## Patches & Features
