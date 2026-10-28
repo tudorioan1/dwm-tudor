@@ -1,0 +1,25 @@
+/* Everforest — colours for themes/rofi-everforest.rasi (derived from [theme.everforest] in themes.toml) */
+* {
+    bg0: #2D353B;          /* window background (same as the Polybar) */
+    bg1: #3D4841;          /* secondary panels */
+
+    fg0: #D3C6AA;          /* main text */
+    fg1: #8A978E;          /* secondary text */
+
+    red: #E67E80;
+    red-trans: #E67E8015;
+    green: #A7C080;
+    green-trans: #A7C08015;
+    yellow: #DBBC7F;
+    yellow-trans: #DBBC7F15;
+    blue: #7FBBB3;
+    blue-trans: #7FBBB315;
+    purple: #D699B6;
+    purple-trans: #D699B615;
+    aqua: #83C092;
+    aqua-trans: #83C09215;
+
+    /* Theme accent: window border, input field and selection (see themes/gnomio.rasi) */
+    accent: #A7C080;
+    accent-trans: #A7C08015;
+}

@@ -1,0 +1,25 @@
+/* Catppuccin Latte — colours for themes/rofi-catppuccin-latte.rasi (derived from [theme.catppuccin-latte] in themes.toml) */
+* {
+    bg0: #EFF1F5;          /* window background (same as the Polybar) */
+    bg1: #DCE0E8;          /* secondary panels */
+
+    fg0: #4C4F69;          /* main text */
+    fg1: #6C6F85;          /* secondary text */
+
+    red: #D20F39;
+    red-trans: #D20F3915;
+    green: #40A02B;
+    green-trans: #40A02B15;
+    yellow: #DF8E1D;
+    yellow-trans: #DF8E1D15;
+    blue: #1E66F5;
+    blue-trans: #1E66F515;
+    purple: #EA76CB;
+    purple-trans: #EA76CB15;
+    aqua: #179299;
+    aqua-trans: #17929915;
+
+    /* Theme accent: window border, input field and selection (see themes/gnomio.rasi) */
+    accent: #8839EF;
+    accent-trans: #8839EF1A;
+}

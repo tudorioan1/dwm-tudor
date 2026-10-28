@@ -1,0 +1,25 @@
+/* Tokyo Night Day — colours for themes/rofi-tokyonight-day.rasi (derived from [theme.tokyonight-day] in themes.toml) */
+* {
+    bg0: #E1E2E7;          /* window background (same as the Polybar) */
+    bg1: #D0D5E3;          /* secondary panels */
+
+    fg0: #2F4E9E;          /* main text */
+    fg1: #5C669F;          /* secondary text */
+
+    red: #F52A65;
+    red-trans: #F52A6515;
+    green: #587539;
+    green-trans: #58753915;
+    yellow: #8C6C3E;
+    yellow-trans: #8C6C3E15;
+    blue: #2E7DE9;
+    blue-trans: #2E7DE915;
+    purple: #9854F1;
+    purple-trans: #9854F115;
+    aqua: #007197;
+    aqua-trans: #00719715;
+
+    /* Theme accent: window border, input field and selection (see themes/gnomio.rasi) */
+    accent: #1560C7;
+    accent-trans: #1560C720;
+}

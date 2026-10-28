@@ -1,0 +1,25 @@
+/* Nord — colours for themes/rofi-nord.rasi (derived from [theme.nord] in themes.toml) */
+* {
+    bg0: #2E3440;          /* window background (same as the Polybar) */
+    bg1: #3B4252;          /* secondary panels */
+
+    fg0: #D8DEE9;          /* main text */
+    fg1: #8894AB;          /* secondary text */
+
+    red: #BF616A;
+    red-trans: #BF616A15;
+    green: #A3BE8C;
+    green-trans: #A3BE8C15;
+    yellow: #EBCB8B;
+    yellow-trans: #EBCB8B15;
+    blue: #81A1C1;
+    blue-trans: #81A1C115;
+    purple: #B48EAD;
+    purple-trans: #B48EAD15;
+    aqua: #88C0D0;
+    aqua-trans: #88C0D015;
+
+    /* Theme accent: window border, input field and selection (see themes/gnomio.rasi) */
+    accent: #88A8C6;
+    accent-trans: #88A8C615;
+}

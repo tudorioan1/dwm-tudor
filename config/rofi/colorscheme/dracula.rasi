@@ -1,0 +1,25 @@
+/* Dracula — colours for themes/rofi-dracula.rasi (derived from [theme.dracula] in themes.toml) */
+* {
+    bg0: #282A36;          /* window background (same as the Polybar) */
+    bg1: #44475A;          /* secondary panels */
+
+    fg0: #F8F8F2;          /* main text */
+    fg1: #7B88BE;          /* secondary text */
+
+    red: #FF5555;
+    red-trans: #FF555515;
+    green: #50FA7B;
+    green-trans: #50FA7B15;
+    yellow: #F1FA8C;
+    yellow-trans: #F1FA8C15;
+    blue: #BD93F9;
+    blue-trans: #BD93F915;
+    purple: #FF79C6;
+    purple-trans: #FF79C615;
+    aqua: #8BE9FD;
+    aqua-trans: #8BE9FD15;
+
+    /* Theme accent: window border, input field and selection (see themes/gnomio.rasi) */
+    accent: #C199F9;
+    accent-trans: #C199F915;
+}

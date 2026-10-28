@@ -1,0 +1,25 @@
+/* Rosé Pine Dawn — colours for themes/rofi-rosepine-dawn.rasi (derived from [theme.rosepine-dawn] in themes.toml) */
+* {
+    bg0: #FAF4ED;          /* window background (same as the Polybar) */
+    bg1: #EFE4DB;          /* secondary panels */
+
+    fg0: #575279;          /* main text */
+    fg1: #797593;          /* secondary text */
+
+    red: #B4637A;
+    red-trans: #B4637A15;
+    green: #286983;
+    green-trans: #28698315;
+    yellow: #EA9D34;
+    yellow-trans: #EA9D3415;
+    blue: #56949F;
+    blue-trans: #56949F15;
+    purple: #907AA9;
+    purple-trans: #907AA915;
+    aqua: #D7827E;
+    aqua-trans: #D7827E15;
+
+    /* Theme accent: window border, input field and selection (see themes/gnomio.rasi) */
+    accent: #7E649B;
+    accent-trans: #7E649B20;
+}

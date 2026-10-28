@@ -1,0 +1,25 @@
+/* Catppuccin Mocha — colours for themes/rofi-catppuccin.rasi (derived from [theme.catppuccin] in themes.toml) */
+* {
+    bg0: #1E1E2E;          /* window background (same as the Polybar) */
+    bg1: #313244;          /* secondary panels */
+
+    fg0: #CDD6F4;          /* main text */
+    fg1: #7F849C;          /* secondary text */
+
+    red: #F38BA8;
+    red-trans: #F38BA815;
+    green: #A6E3A1;
+    green-trans: #A6E3A115;
+    yellow: #F9E2AF;
+    yellow-trans: #F9E2AF15;
+    blue: #89B4FA;
+    blue-trans: #89B4FA15;
+    purple: #F5C2E7;
+    purple-trans: #F5C2E715;
+    aqua: #94E2D5;
+    aqua-trans: #94E2D515;
+
+    /* Theme accent: window border, input field and selection (see themes/gnomio.rasi) */
+    accent: #CBA6F7;
+    accent-trans: #CBA6F715;
+}

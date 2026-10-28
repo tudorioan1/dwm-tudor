@@ -1,0 +1,25 @@
+/* One Dark — colours for themes/rofi-onedark.rasi (derived from [theme.onedark] in themes.toml) */
+* {
+    bg0: #282C34;          /* window background (same as the Polybar) */
+    bg1: #3E4451;          /* secondary panels */
+
+    fg0: #ABB2BF;          /* main text */
+    fg1: #848D9B;          /* secondary text */
+
+    red: #E06C75;
+    red-trans: #E06C7515;
+    green: #98C379;
+    green-trans: #98C37915;
+    yellow: #E5C07B;
+    yellow-trans: #E5C07B15;
+    blue: #61AFEF;
+    blue-trans: #61AFEF15;
+    purple: #C678DD;
+    purple-trans: #C678DD15;
+    aqua: #56B6C2;
+    aqua-trans: #56B6C215;
+
+    /* Theme accent: window border, input field and selection (see themes/gnomio.rasi) */
+    accent: #61AFEF;
+    accent-trans: #61AFEF15;
+}

@@ -1,0 +1,25 @@
+/* Gruvbox Light — colours for themes/rofi-gruvbox-light.rasi (derived from [theme.gruvbox-light] in themes.toml) */
+* {
+    bg0: #FBF1C7;          /* window background (same as the Polybar) */
+    bg1: #EBDBB2;          /* secondary panels */
+
+    fg0: #3C3836;          /* main text */
+    fg1: #7C6F64;          /* secondary text */
+
+    red: #CC241D;
+    red-trans: #CC241D15;
+    green: #98971A;
+    green-trans: #98971A15;
+    yellow: #D79921;
+    yellow-trans: #D7992115;
+    blue: #458588;
+    blue-trans: #45858815;
+    purple: #B16286;
+    purple-trans: #B1628615;
+    aqua: #689D6A;
+    aqua-trans: #689D6A15;
+
+    /* Theme accent: window border, input field and selection (see themes/gnomio.rasi) */
+    accent: #8F5F0D;
+    accent-trans: #8F5F0D20;
+}

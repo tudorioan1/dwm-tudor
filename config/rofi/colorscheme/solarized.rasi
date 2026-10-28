@@ -1,0 +1,25 @@
+/* Solarized Dark — colours for themes/rofi-solarized.rasi (derived from [theme.solarized] in themes.toml) */
+* {
+    bg0: #002B36;          /* window background (same as the Polybar) */
+    bg1: #073642;          /* secondary panels */
+
+    fg0: #93A1A1;          /* main text */
+    fg1: #6D8992;          /* secondary text */
+
+    red: #DC322F;
+    red-trans: #DC322F15;
+    green: #859900;
+    green-trans: #85990015;
+    yellow: #B58900;
+    yellow-trans: #B5890015;
+    blue: #268BD2;
+    blue-trans: #268BD215;
+    purple: #D33682;
+    purple-trans: #D3368215;
+    aqua: #2AA198;
+    aqua-trans: #2AA19815;
+
+    /* Theme accent: window border, input field and selection (see themes/gnomio.rasi) */
+    accent: #2AA198;
+    accent-trans: #2AA1981A;
+}

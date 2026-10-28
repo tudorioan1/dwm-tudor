@@ -1,0 +1,25 @@
+/* Rosé Pine — colours for themes/rofi-rosepine.rasi (derived from [theme.rosepine] in themes.toml) */
+* {
+    bg0: #191724;          /* window background (same as the Polybar) */
+    bg1: #26233A;          /* secondary panels */
+
+    fg0: #E0DEF4;          /* main text */
+    fg1: #807C97;          /* secondary text */
+
+    red: #EB6F92;
+    red-trans: #EB6F9215;
+    green: #31748F;
+    green-trans: #31748F15;
+    yellow: #F6C177;
+    yellow-trans: #F6C17715;
+    blue: #9CCFD8;
+    blue-trans: #9CCFD815;
+    purple: #C4A7E7;
+    purple-trans: #C4A7E715;
+    aqua: #EBBCBA;
+    aqua-trans: #EBBCBA15;
+
+    /* Theme accent: window border, input field and selection (see themes/gnomio.rasi) */
+    accent: #C4A7E7;
+    accent-trans: #C4A7E715;
+}
