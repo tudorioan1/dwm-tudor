@@ -1,4 +1,4 @@
-<div align="left">
+<div align="center">
   <img src="./dwm.png" alt="dwm-logo" width="185" height="230"/>
 
   # **dwm - dynamic window manager**
