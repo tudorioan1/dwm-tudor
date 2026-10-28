@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./dwm.png" alt="dwm-logo" width="195" height="140"/>
+  <img src="./dwm.png" alt="dwm-logo" width="195" height="230"/>
 
   # dwm - dynamic window manager
   ### dwm is an extremely ***fast***, ***small***, and ***dynamic*** window manager for X.
