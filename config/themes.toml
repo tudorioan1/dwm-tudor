@@ -49,7 +49,8 @@ borderpx = 3   # border size in pixels (0 = none, 1-3 = recommended)
 #     term_color0 … term_color15  (standard 16-color palette)
 #
 #   Ghostty: ghostty_theme = "BuiltInThemeName"  (or "custom" to use term_* above)
-#   Rofi:    rofi_theme    = "filename"           (without .rasi, from rofi/themes/)
+#   Rofi:    rofi_theme    = "filename"           (without .rasi, from rofi/themes/; each theme has its own
+#                                                  "rofi-<theme>", the older "sidetab-*" layouts also work)
 #   Dark mode: dark_mode = true                   (true = dark, false = light; default: true)
 #   Polybar: polybar_bg / polybar_fg / polybar_bg_alt / polybar_fg_alt / polybar_accent / polybar_urgent
 
@@ -84,7 +85,7 @@ term_color14    = "#8FBCBB"
 term_color15    = "#ECEFF4"
 
 ghostty_theme   = "Nord"
-rofi_theme      = "sidetab-nord"
+rofi_theme      = "rofi-nord"
 dark_mode       = true
 
 polybar_bg      = "#2e3440"
@@ -125,7 +126,7 @@ term_color14    = "#A4FFFF"
 term_color15    = "#FFFFFF"
 
 ghostty_theme   = "Dracula"
-rofi_theme      = "sidetab-dracula"
+rofi_theme      = "rofi-dracula"
 dark_mode       = true
 
 polybar_bg      = "#282A36"
@@ -166,7 +167,7 @@ term_color14    = "#8EC07C"
 term_color15    = "#EBDBB2"
 
 ghostty_theme   = "Gruvbox Dark"
-rofi_theme      = "sidetab-gruvbox"
+rofi_theme      = "rofi-gruvbox"
 dark_mode       = true
 
 polybar_bg      = "#282828"
@@ -207,7 +208,7 @@ term_color14    = "#94E2D5"
 term_color15    = "#A6ADC8"
 
 ghostty_theme   = "Catppuccin Mocha"
-rofi_theme      = "sidetab-catppuccin"
+rofi_theme      = "rofi-catppuccin"
 dark_mode       = true
 
 polybar_bg      = "#1E1E2E"
@@ -248,7 +249,7 @@ term_color14    = "#7DCFFF"
 term_color15    = "#C0CAF5"
 
 ghostty_theme   = "TokyoNight"
-rofi_theme      = "sidetab-tokyonight"
+rofi_theme      = "rofi-tokyonight"
 dark_mode       = true
 
 polybar_bg      = "#1A1B26"
@@ -289,7 +290,7 @@ term_color14    = "#56B6C2"
 term_color15    = "#FFFFFF"
 
 ghostty_theme   = "One Dark"
-rofi_theme      = "sidetab-onedark"
+rofi_theme      = "rofi-onedark"
 dark_mode       = true
 
 polybar_bg      = "#282C34"
@@ -330,7 +331,7 @@ term_color14    = "#93A1A1"
 term_color15    = "#FDF6E3"
 
 ghostty_theme   = "Solarized Dark Patched"
-rofi_theme      = "sidetab-solarized"
+rofi_theme      = "rofi-solarized"
 dark_mode       = true
 
 polybar_bg      = "#002B36"
@@ -371,7 +372,7 @@ term_color14    = "#EBBCBA"
 term_color15    = "#E0DEF4"
 
 ghostty_theme   = "Rose Pine"
-rofi_theme      = "sidetab-rosepine"
+rofi_theme      = "rofi-rosepine"
 dark_mode       = true
 
 polybar_bg      = "#191724"
@@ -412,7 +413,7 @@ term_color14    = "#83C092"
 term_color15    = "#D3C6AA"
 
 ghostty_theme   = "Everforest Dark"
-rofi_theme      = "sidetab-everforest"
+rofi_theme      = "rofi-everforest"
 dark_mode       = true
 
 polybar_bg      = "#2D353B"
@@ -453,7 +454,7 @@ term_color14    = "#88CCCC"
 term_color15    = "#FFFFFF"
 
 ghostty_theme   = "Monochrome"
-rofi_theme      = "theme"
+rofi_theme      = "rofi-monochrome"
 dark_mode       = true
 
 #polybar_bg      = "#H3A2I2"
@@ -499,7 +500,7 @@ term_color14    = "#179299"
 term_color15    = "#BCC0CC"
 
 ghostty_theme   = "Catppuccin Latte"
-rofi_theme      = "sidetab-catppuccin"
+rofi_theme      = "rofi-catppuccin-latte"
 dark_mode       = false
 
 polybar_bg      = "#EFF1F5"
@@ -540,7 +541,7 @@ term_color14    = "#427B58"
 term_color15    = "#3C3836"
 
 ghostty_theme   = "Gruvbox Light"
-rofi_theme      = "sidetab-gruvbox"
+rofi_theme      = "rofi-gruvbox-light"
 dark_mode       = false
 
 polybar_bg      = "#FBF1C7"
@@ -581,7 +582,7 @@ term_color14    = "#93A1A1"
 term_color15    = "#FDF6E3"
 
 ghostty_theme   = "iTerm2 Solarized Light"
-rofi_theme      = "sidetab-solarized"
+rofi_theme      = "rofi-solarized-light"
 dark_mode       = false
 
 polybar_bg      = "#FDF6E3"
@@ -622,7 +623,7 @@ term_color14    = "#D7827E"
 term_color15    = "#575279"
 
 ghostty_theme   = "Rose Pine Dawn"
-rofi_theme      = "sidetab-rosepine"
+rofi_theme      = "rofi-rosepine-dawn"
 dark_mode       = false
 
 polybar_bg      = "#FAF4ED"
@@ -663,7 +664,7 @@ term_color14    = "#007197"
 term_color15    = "#3760BF"
 
 ghostty_theme   = "TokyoNight Day"
-rofi_theme      = "sidetab-tokyonight"
+rofi_theme      = "rofi-tokyonight-day"
 dark_mode       = false
 
 polybar_bg      = "#E1E2E7"
