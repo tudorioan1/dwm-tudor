@@ -1,0 +1,5 @@
+@import "config/general"
+@import "config/icons"
+@import "colorscheme/solarized-light"
+
+@import "themes/gnomio"
