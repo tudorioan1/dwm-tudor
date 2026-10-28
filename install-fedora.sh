@@ -13,6 +13,7 @@ info() { printf "${CYAN}[INFO]${NC} %s\n" "$1"; }
 ok()   { printf "${GREEN}[OK]${NC} %s\n" "$1"; }
 warn() { printf "${YELLOW}[WARN]${NC} %s\n" "$1"; }
 err()  { printf "${RED}[ERROR]${NC} %s\n" "$1"; }
+source "$REPO_DIR/scripts/post-install.sh"
 
 command -v dnf &>/dev/null || { err "This installer requires Fedora/RHEL (dnf not found)."; exit 1; }
 
@@ -61,15 +62,7 @@ install_any() {
     return 1
 }
 
-# confirm "<question>": yes by default. Without a terminal (piped / unattended run) the
-# answer is no, so nothing third-party is ever added silently.
-confirm() {
-    [ -t 0 ] || return 1
-    local reply
-    read -r -p "$1 [Y/n] " reply
-    case "$reply" in [nN]*) return 1 ;; *) return 0 ;; esac
-}
-
+# (confirm() comes from scripts/post-install.sh)
 # install_from_copr <copr> <pkg>...: enable a third-party COPR (after asking) and install from it.
 install_from_copr() {
     local copr="$1"; shift
@@ -86,6 +79,9 @@ install_from_copr() {
     fi
     install_packages "$@" && ok "Installed from COPR $copr: $*"
 }
+
+# Packages for the optional GTK look (used by setup_gtk_look in scripts/post-install.sh)
+install_gtk_theme_packages() { install_packages materia-gtk-theme papirus-icon-theme; }
 
 BG_DIR="$HOME/Pictures/backgrounds"
 FONT_DIR="$HOME/.local/share/fonts"
@@ -113,7 +109,7 @@ ok "Build dependencies installed."
 
 # ── Runtime dependencies ─────────────────────────────────
 info "Installing runtime dependencies..."
-if install_packages rofi picom dunst feh flameshot papirus-icon-theme dex-autostart mate-polkit alsa-utils git curl unzip xclip \
+if install_packages rofi picom dunst feh flameshot papirus-icon-theme dex-autostart mate-polkit alsa-utils git curl unzip xz xclip \
     xprop thunar gvfs tumbler thunar-archive-plugin xdg-user-dirs \
     xdg-desktop-portal-gtk pipewire pavucontrol gnome-keyring NetworkManager network-manager-applet \
     libnotify rsync xdotool setxkbmap
@@ -273,6 +269,12 @@ if [ -f "$REPO_DIR/dwm" ]; then
         warn "libXinerama NOT found in 'ldd dwm' output — multi-monitor support may be missing."
     fi
 fi
+
+# ── Optional setup (asked at the end) ────────────────────
+# Each step asks first and is skipped without a terminal; see scripts/post-install.sh
+setup_gtk_look
+setup_bash_prompt
+setup_default_browser
 
 # ── Anything that failed to install? ─────────────────────
 if [ "${#FAILED_PKGS[@]}" -gt 0 ]; then
