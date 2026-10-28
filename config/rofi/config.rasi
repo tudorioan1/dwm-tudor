@@ -8,4 +8,4 @@ configuration {
   display-combi: "  ";
 }
 
-@theme "themes/theme.rasi"
+@theme "themes/rofi-monochrome.rasi"
