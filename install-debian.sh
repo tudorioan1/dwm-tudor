@@ -13,6 +13,7 @@ info() { printf "${CYAN}[INFO]${NC} %s\n" "$1"; }
 ok()   { printf "${GREEN}[OK]${NC} %s\n" "$1"; }
 warn() { printf "${YELLOW}[WARN]${NC} %s\n" "$1"; }
 err()  { printf "${RED}[ERROR]${NC} %s\n" "$1"; }
+source "$REPO_DIR/scripts/post-install.sh"
 
 command -v apt-get &>/dev/null || { err "This installer requires Debian/Ubuntu (apt-get not found)."; exit 1; }
 
@@ -72,6 +73,9 @@ echo "╚═══════════════════════�
 echo ""
 info "Package manager: $PKG_CMD"
 
+# Packages for the optional GTK look (used by setup_gtk_look in scripts/post-install.sh)
+install_gtk_theme_packages() { install_packages materia-gtk-theme papirus-icon-theme; }
+
 # ── Refresh package lists ─────────────────────────────────
 # Unlike pacman/dnf, apt needs an explicit metadata refresh or a fresh
 # system will 404 on half the packages below.
@@ -106,7 +110,7 @@ ok "Build dependencies installed."
 
 # ── Runtime dependencies ─────────────────────────────────
 info "Installing runtime dependencies..."
-if install_packages rofi picom dunst feh flameshot dex papirus-icon-theme mate-polkit alsa-utils git curl unzip xclip \
+if install_packages rofi picom dunst feh flameshot dex papirus-icon-theme mate-polkit alsa-utils git curl unzip xz-utils xclip \
     thunar gvfs tumbler thunar-archive-plugin xdg-user-dirs \
     xdg-desktop-portal-gtk pipewire pavucontrol gnome-keyring network-manager network-manager-gnome \
     libnotify-bin rsync xdotool x11-xkb-utils
@@ -329,6 +333,12 @@ if [ -f "$REPO_DIR/dwm" ]; then
         warn "libXinerama NOT found in 'ldd dwm' output — multi-monitor support may be missing."
     fi
 fi
+
+# ── Optional setup (asked at the end) ────────────────────
+# Each step asks first and is skipped without a terminal; see scripts/post-install.sh
+setup_gtk_look
+setup_bash_prompt
+setup_default_browser
 
 # ── Anything that failed to install? ─────────────────────
 if [ "${#FAILED_PKGS[@]}" -gt 0 ]; then
