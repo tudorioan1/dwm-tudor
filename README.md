@@ -143,7 +143,7 @@ Key things to customize in `config.h`:
 
 You can change the theme in two ways:
 
-- **Control Center:** <kbd>SUPER</kbd> + <kbd>F1</kbd> → *Select Theme*
+- **Control Center:** <kbd>SUPER</kbd> + <kbd>F1</kbd> → *Appearance* → *Select Theme*
 - **By hand:** edit `theme = "..."` in `~/.config/dwm-tudor/themes.toml` and follow the instructions written there.
 
 Changing the theme updates dwm, Polybar, rofi and the terminal. The default theme is **monochrome**. Available themes: `monochrome`, `nord`, `dracula`, `gruvbox`, `catppuccin`, `tokyonight`, `onedark`, `solarized`, `rosepine`, `everforest`, and the light ones `catppuccin-latte`, `gruvbox-light`, `solarized-light`, `rosepine-dawn`, `tokyonight-day`.
