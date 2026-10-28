@@ -9,21 +9,56 @@ FloatingWindow {
     id: win
     title: "wallpaper-picker"
     implicitWidth: 920
-    implicitHeight: 640
-    color: "#161616"
+    implicitHeight: 672
+    color: bg
     visible: true
 
-    readonly property color bg:      "#161616"
-    readonly property color panel:   "#1f1f1f"
-    readonly property color line:    "#3a3a3a"
-    readonly property color dim:     "#8a8a8a"
-    readonly property color fg:      "#e6e6e6"
+    // Palette. The values below are the plain black look, used when no theme file is found.
+    // applyTheme() replaces them with colours derived from the active dwm theme (polybar's
+    // colors.ini, written by theme-apply.sh) and keeps them in sync when the theme changes.
+    property color bg:      "#0f0f0f"
+    property color panel:   "#181818"
+    property color line:    "#333333"
+    property color dim:     "#8a8a8a"
+    property color fg:      "#e6e6e6"
 
     readonly property string home: Quickshell.env("HOME")
     readonly property string stateFile: home + "/.config/quickshell/wallpaper-picker/last-dir"
     property string wallDir: home + "/Pictures/backgrounds"
     property string current: ""
     property bool closeOnPick: false
+
+    function hexColor(h) {
+        return Qt.rgba(parseInt(h.substr(1, 2), 16) / 255,
+                       parseInt(h.substr(3, 2), 16) / 255,
+                       parseInt(h.substr(5, 2), 16) / 255, 1)
+    }
+
+    function mix(a, b, t) {
+        return Qt.rgba(a.r + (b.r - a.r) * t, a.g + (b.g - a.g) * t, a.b + (b.b - a.b) * t, 1)
+    }
+
+    // Build the palette from polybar's colors.ini. The window background is a little darker
+    // than the bar; panels (inputs, thumbnails) stand out from it: between the bar and its alt
+    // colour on dark themes, the bar colour itself on light ones. If the file is missing
+    // or half-written (theme-apply.sh is mid-write) the current look is kept.
+    function applyTheme(text) {
+        const found = {}
+        const lines = text.split("\n")
+        for (let i = 0; i < lines.length; i++) {
+            const m = lines[i].match(/^\s*(bg|fg|bg-alt|fg-alt)\s*=\s*(#[0-9A-Fa-f]{6})(?![0-9A-Fa-f])/)
+            if (m) found[m[1]] = m[2]
+        }
+        if (!found["bg"] || !found["fg"] || !found["bg-alt"] || !found["fg-alt"]) return
+
+        const tbg = hexColor(found["bg"])
+        const dark = (0.299 * tbg.r + 0.587 * tbg.g + 0.114 * tbg.b) < 0.5
+        bg = Qt.darker(tbg, dark ? 1.35 : 1.05)
+        panel = dark ? mix(tbg, hexColor(found["bg-alt"]), 0.5) : tbg
+        dim = hexColor(found["fg-alt"])
+        fg = hexColor(found["fg"])
+        line = mix(panel, dim, 0.35)
+    }
 
     function expand(p) {
         p = p.trim()
@@ -53,6 +88,15 @@ FloatingWindow {
         blockLoading: true
     }
 
+    // Follow the dwm theme: re-read colors.ini whenever theme-apply.sh rewrites it
+    FileView {
+        id: themeColors
+        path: win.home + "/.config/polybar/themes/minimal/colors.ini"
+        watchChanges: true
+        onFileChanged: themeColors.reload()
+        onLoaded: win.applyTheme(themeColors.text())
+    }
+
     Process { id: feh }
 
     Component.onCompleted: {
@@ -72,8 +116,77 @@ FloatingWindow {
         anchors.fill: parent
         color: win.bg
 
+        // Title strip, with the close button in the top-right corner
+        Item {
+            id: header
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: 32
+
+            Text {
+                anchors.left: parent.left
+                anchors.leftMargin: 14
+                anchors.verticalCenter: parent.verticalCenter
+                text: "Wallpaper picker"
+                color: win.dim
+                font.pixelSize: 12
+            }
+
+            Rectangle {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                height: 1
+                color: win.line
+            }
+
+            Rectangle {
+                id: closeBtn
+                anchors.top: parent.top
+                anchors.right: parent.right
+                width: 40
+                height: parent.height - 1
+                color: closeArea.containsMouse ? win.fg : "transparent"
+
+                // The X is drawn with two rotated bars, so it does not depend on any font
+                Item {
+                    anchors.centerIn: parent
+                    width: 14
+                    height: 14
+                    Rectangle {
+                        anchors.centerIn: parent
+                        width: 16
+                        height: 1.5
+                        rotation: 45
+                        antialiasing: true
+                        color: closeArea.containsMouse ? win.bg : win.fg
+                    }
+                    Rectangle {
+                        anchors.centerIn: parent
+                        width: 16
+                        height: 1.5
+                        rotation: -45
+                        antialiasing: true
+                        color: closeArea.containsMouse ? win.bg : win.fg
+                    }
+                }
+
+                MouseArea {
+                    id: closeArea
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: Qt.quit()
+                }
+            }
+        }
+
         Column {
-            anchors.fill: parent
+            anchors.top: header.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
             anchors.margins: 14
             spacing: 12
 
@@ -201,7 +314,7 @@ FloatingWindow {
                                 anchors.right: img.right
                                 anchors.bottom: img.bottom
                                 height: 22
-                                color: "#cc161616"
+                                color: Qt.rgba(win.bg.r, win.bg.g, win.bg.b, 0.8)
                                 Text {
                                     anchors.fill: parent
                                     anchors.leftMargin: 8
@@ -237,7 +350,7 @@ FloatingWindow {
             Text {
                 width: parent.width
                 height: 22
-                text: folderModel.count + " images   |   click = set image as backgroud   |   Esc = close   | backend = feh "
+                text: folderModel.count + " images   |   click = set image as background   |   Esc = close   | backend = feh "
                 color: win.dim
                 font.pixelSize: 11
                 verticalAlignment: Text.AlignVCenter
