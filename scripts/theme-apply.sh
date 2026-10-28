@@ -306,25 +306,49 @@ gtk_ini_set() {
     fi
 }
 
-# GTK3
-gtk_ini_set "${XDG_CONFIG_HOME:-$HOME/.config}/gtk-3.0/settings.ini" \
-    "gtk-application-prefer-dark-theme" "$GTK_DARK_PREF"
-gtk_ini_set "${XDG_CONFIG_HOME:-$HOME/.config}/gtk-3.0/settings.ini" \
-    "gtk-theme-name" "$GTK_THEME_NAME"
+# Helper: same for ~/.gtkrc-2.0 (key="value" lines), keeping every other line
+gtkrc_set() {
+    local file="$HOME/.gtkrc-2.0" key="$1" value="$2"
+    if [[ -f "$file" ]] && grep -q "^${key}=" "$file"; then
+        sed -i "s|^${key}=.*|${key}=\"${value}\"|" "$file"
+    else
+        printf '%s="%s"\n' "$key" "$value" >> "$file"
+    fi
+}
 
-# GTK4
-gtk_ini_set "${XDG_CONFIG_HOME:-$HOME/.config}/gtk-4.0/settings.ini" \
-    "gtk-application-prefer-dark-theme" "$GTK_DARK_PREF"
-gtk_ini_set "${XDG_CONFIG_HOME:-$HOME/.config}/gtk-4.0/settings.ini" \
-    "gtk-theme-name" "$GTK_THEME_NAME"
+# A read-only or immutable file (chattr +i, read-only dotfiles) must not abort the whole script:
+# the Qt step below still has to run. Say so and carry on.
+gtk_try() { "$@" || echo "theme-apply: '$*' failed (read-only or immutable file?) - skipped" >&2; }
 
-# GTK2
-printf 'gtk-theme-name="%s"\n' "$GTK_THEME_NAME" > "$HOME/.gtkrc-2.0"
+GTK3_INI="${XDG_CONFIG_HOME:-$HOME/.config}/gtk-3.0/settings.ini"
+GTK4_INI="${XDG_CONFIG_HOME:-$HOME/.config}/gtk-4.0/settings.ini"
+
+# The GTK theme NAME is only managed here while it is unset or one of the stock Adwaita pair.
+# Once the user has picked another theme (nwg-look, or the installer's GTK step) it is left
+# alone: it used to be reset to Adwaita on every login and theme switch, so a chosen theme
+# never survived a restart. The dark/light PREFERENCE is still synced either way.
+CURRENT_GTK_THEME="$(sed -n 's/^gtk-theme-name=//p' "$GTK3_INI" 2>/dev/null | head -n1 || true)"
+case "$CURRENT_GTK_THEME" in
+    ""|Adwaita|Adwaita-dark) MANAGE_GTK_NAME=1 ;;
+    *)                       MANAGE_GTK_NAME=0 ;;
+esac
+
+# GTK3 / GTK4
+gtk_try gtk_ini_set "$GTK3_INI" "gtk-application-prefer-dark-theme" "$GTK_DARK_PREF"
+gtk_try gtk_ini_set "$GTK4_INI" "gtk-application-prefer-dark-theme" "$GTK_DARK_PREF"
+if [[ "$MANAGE_GTK_NAME" == 1 ]]; then
+    gtk_try gtk_ini_set "$GTK3_INI" "gtk-theme-name" "$GTK_THEME_NAME"
+    gtk_try gtk_ini_set "$GTK4_INI" "gtk-theme-name" "$GTK_THEME_NAME"
+    # GTK2
+    gtk_try gtkrc_set "gtk-theme-name" "$GTK_THEME_NAME"
+fi
 
 # Live D-Bus update — affects running GTK4 apps, Flatpaks, and XDG portals
 if command -v gsettings &>/dev/null; then
     gsettings set org.gnome.desktop.interface color-scheme "$GTK_COLOR_SCHEME" 2>/dev/null || true
-    gsettings set org.gnome.desktop.interface gtk-theme    "$GTK_THEME_NAME"   2>/dev/null || true
+    if [[ "$MANAGE_GTK_NAME" == 1 ]]; then
+        gsettings set org.gnome.desktop.interface gtk-theme "$GTK_THEME_NAME" 2>/dev/null || true
+    fi
 fi
 
 
