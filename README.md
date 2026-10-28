@@ -7,7 +7,7 @@
 </div>
 
 ---
-> **Note** : This project is still very rough around the edges, it is not for everyone! It implies understanding how Linux and window managers really work. This is made specifically for me and it might need additional troubleshooting after installing.
+> **Note:** This is a personal project and still a work in progress. It is built around my own workflow and assumes some familiarity with Linux and window managers, so a little troubleshooting after installing is to be expected.
 
 A functional, minimalist and super fast desktop experience based on Suckless' DWM, that was heavily modified for my needs. It includes numerous patches and customizations for a productive workflow on **Arch Linux, Fedora and Debian/Ubuntu** with X11 (Wayland is not supported).
 <img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/2be9d3ef-42b2-4880-bb91-13344ad5b626" />
@@ -28,6 +28,7 @@ A functional, minimalist and super fast desktop experience based on Suckless' DW
 - **Multi-monitor** — Xinerama support with per-monitor Polybar bars
 - **Live theming** — 15 themes that restyle dwm, Polybar, rofi and the terminal at once
 - **Control Center** — rofi-based menu (<kbd>SUPER</kbd> + <kbd>F1</kbd>) for themes, system health and quick actions
+- **Wallpaper picker** — Quickshell grid opened from Polybar; it follows the colors of the active theme (black if none is found) and closes with the X button in its top-right corner or <kbd>Esc</kbd>
 
 ## Installation
 
@@ -55,6 +56,14 @@ git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./
 - **Quickshell** (used by the wallpaper picker). On **Debian 13** the installer enables the official `trixie-backports` repository (it adds `/etc/apt/sources.list.d/debian-backports.sources`) and installs `quickshell` from it, together with the Qt QML modules it needs. Debian 12 is too old for Quickshell, and on Ubuntu older than 26.10 it has to be installed manually (the installer prints the PPA command).
 - `dwm-session` is installed by `make install`; no manual copy step is needed.
 
+### Questions asked at the end of the install
+
+All three are optional: press <kbd>Enter</kbd> for yes, <kbd>n</kbd> for no. Nothing is changed when the installer runs without a terminal.
+
+- **GTK look:** *Materia-dark* theme, *Papirus-Dark* icons and the *Bibata-Modern-Ice* cursor (the cursor is downloaded from upstream; the theme and icons come from your distro's packages). If you answer no, your current GTK theme, icons and cursor stay as they are.
+- **Bash prompt:** installs my customised bash prompt from [tudorioan1/mybash](https://github.com/tudorioan1/mybash) (cloned to `~/mybash`).
+- **Default web browser:** the installer scans the browsers installed on your system (native, Flatpak and Snap) and lets you pick one. It becomes the system default (`xdg-settings`) and the `browser` variable in `~/.config/dwm-tudor/hotkeys.toml`, which <kbd>SUPER</kbd> + <kbd>B</kbd> uses.
+
 ### Post-Install Setup
 
 **Option A — Display Manager** (SDDM, GDM, LightDM, etc.):
@@ -70,7 +79,9 @@ startx
 **The `.xinitrc` disables screen blanking/DPMS (prevents NVIDIA GPU issues on wake), launches Polybar, and starts dwm.
 For changing display resolution or refresh rate, use xrandr.**
 
-**GTK theming:** to change the GTK theme, icon theme, cursor theme and font, launch `nwg-look` from the terminal (not as root). Papirus is installed but not selected automatically: pick **Papirus-Dark** (or **Papirus-Light** for the light themes) there.
+**GTK theming:** the installer can set a GTK look for you (see above): **Materia-dark** theme, **Papirus-Dark** icons and the **Bibata-Modern-Ice** cursor. To change the GTK theme, icon theme, cursor theme and font manually, use **`nwg-look`** (installed by the installers) or **`lxappearance`** (install it from your distro's repositories). Launch either one from a terminal as a normal user, not as root. *Materia-dark* is the theme that works best with this setup.
+
+> **Note:** a theme picked with `nwg-look` or `lxappearance` used to be lost at every restart, because `theme-apply.sh` reset the GTK theme to Adwaita each time. Current versions only manage the GTK theme *name* while it is unset or one of the stock Adwaita themes, and they always keep the dark/light preference in sync, so your choice now survives restarts and theme switches. If it still resets (for example with an older `theme-apply.sh`), lock the file: `sudo chattr +i ~/.config/gtk-3.0/settings.ini`. Undo it with `sudo chattr -i ~/.config/gtk-3.0/settings.ini` before changing the GTK theme again.
 
 ## Keybindings
 
@@ -89,15 +100,15 @@ To modify the keybinds, edit `~/.config/dwm-tudor/hotkeys.toml` (hot-reloading, 
 | <kbd>SUPER</kbd> + <kbd>Q</kbd> | Close window |
 | <kbd>SUPER</kbd> + <kbd>J</kbd> / <kbd>K</kbd> | Focus next / previous window |
 | <kbd>SUPER</kbd> + <kbd>H</kbd> / <kbd>L</kbd> | Resize master area |
-| <kbd>SUPER</kbd> + <kbd>1-5</kbd> | Switch to tag (workspace) |
-| <kbd>SUPER</kbd> + <kbd>Shift</kbd> + <kbd>1-5</kbd> | Move window to tag |
+| <kbd>SUPER</kbd> + <kbd>1-9</kbd> | Switch to tag (workspace) |
+| <kbd>SUPER</kbd> + <kbd>Shift</kbd> + <kbd>1-9</kbd> | Move window to tag |
 | <kbd>SUPER</kbd> + <kbd>T</kbd> / <kbd>F</kbd> / <kbd>M</kbd> | Tile layout / Float layout / Fullscreen |
 | <kbd>SUPER</kbd> + <kbd>Space</kbd> | Toggle floating |
 | <kbd>SUPER</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> | Screenshot (Flameshot) |
 | <kbd>SUPER</kbd> + <kbd>Ctrl</kbd> + <kbd>Q</kbd> | Power menu |
 | <kbd>SUPER</kbd> + <kbd>Shift</kbd> + <kbd>Q</kbd> | Quit dwm |
 
-Personal default (set up for me, change it in `hotkeys.toml`): <kbd>SUPER</kbd> + <kbd>B</kbd> opens the web browser (Brave Origin).
+<kbd>SUPER</kbd> + <kbd>B</kbd> opens your web browser: the one you picked during the install, or `brave-origin` by default. To change it, edit the `browser` variable in the `[vars]` section of `hotkeys.toml` (a command with arguments, such as `flatpak run org.mozilla.firefox`, works too).
 
 ## Configuration
 
@@ -144,6 +155,7 @@ The rofi theme follows the active theme (the `rofi_theme` key of each theme in `
 - **Check dependencies:** Control Center → *Quick Actions* → *Run Dependency Check*, or run `scripts/check-deps.sh`. *System Health* in the Control Center does the same check live and can launch the right installer for your distro.
 - **After `sudo make install`**, log out and back in, so `dwm-session` (and its environment, e.g. the Qt platform theme) is picked up.
 - **An updated script seems to have no effect?** Run `which -a <script>`: a copy in `/usr/local/bin` wins over the one in `~/.local/share/dwm-tudor/scripts/`. Reinstall with `sudo make install`.
+- **GTK theme resets after a restart:** see the note in the GTK theming section (`theme-apply.sh` update, or `chattr +i` on `~/.config/gtk-3.0/settings.ini`).
 - **Flameshot not working:** open it from rofi or a terminal, right-click its icon in the system tray to enter the configuration menu, and enable "legacy X11 screenshot method (deprecated)".
 
 ### Known limitations
