@@ -128,7 +128,7 @@ FloatingWindow {
                 anchors.left: parent.left
                 anchors.leftMargin: 14
                 anchors.verticalCenter: parent.verticalCenter
-                text: "Wallpaper picker"
+                text: "dwm Wallpaper-Picker"
                 color: win.dim
                 font.pixelSize: 12
             }
