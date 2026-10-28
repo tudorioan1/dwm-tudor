@@ -148,7 +148,7 @@ You can change the theme in two ways:
 
 Changing the theme updates dwm, Polybar, rofi and the terminal. The default theme is **monochrome**. Available themes: `monochrome`, `nord`, `dracula`, `gruvbox`, `catppuccin`, `tokyonight`, `onedark`, `solarized`, `rosepine`, `everforest`, and the light ones `catppuccin-latte`, `gruvbox-light`, `solarized-light`, `rosepine-dawn`, `tokyonight-day`.
 
-The rofi theme follows the active theme (the `rofi_theme` key of each theme in `themes.toml`). To use a different rofi theme, change that key or try rofi's Theme Selector.
+Every theme has its own rofi theme (`rofi-monochrome`, `rofi-nord`, `rofi-tokyonight`, ...): the same drop-down launcher, in the colors of the active theme. It is chosen by the `rofi_theme` key of each theme in `themes.toml`. The older `sidetab-*` layouts are still included; to use one, set `rofi_theme` to its name (for example `sidetab-nord`).
 
 ## Troubleshooting
 
