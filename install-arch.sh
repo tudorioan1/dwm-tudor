@@ -9,6 +9,10 @@ info() { printf "${CYAN}[INFO]${NC} %s\n" "$1"; }
 ok()   { printf "${GREEN}[OK]${NC} %s\n" "$1"; }
 warn() { printf "${YELLOW}[WARN]${NC} %s\n" "$1"; }
 err()  { printf "${RED}[ERROR]${NC} %s\n" "$1"; }
+source "$REPO_DIR/scripts/post-install.sh"
+
+# Packages for the optional GTK look (used by setup_gtk_look in scripts/post-install.sh)
+install_gtk_theme_packages() { install_packages materia-gtk-theme papirus-icon-theme; }
 
 command -v pacman &>/dev/null || { err "This installer requires Arch Linux (pacman not found)."; exit 1; }
 
@@ -117,6 +121,12 @@ cd "$REPO_DIR"
 make clean
 make
 sudo make install
+
+# ── Optional setup (asked at the end) ────────────────────
+# Each step asks first and is skipped without a terminal; see scripts/post-install.sh
+setup_gtk_look
+setup_bash_prompt
+setup_default_browser
 
 # ── Done ─────────────────────────────────────────────────
 echo ""
