@@ -53,6 +53,9 @@ picom -b --backend glx 2>/dev/null &
 # Notification daemon
 dunst 2>/dev/null &
 
+# Black screen after suspend/resume (NVIDIA and others): re-apply the wallpaper and reset picom
+command -v resume-hook.sh >/dev/null 2>&1 && resume-hook.sh &
+
 # Polkit authentication agent (try common agents)
 for agent in \
     /usr/lib/mate-polkit/polkit-mate-authentication-agent-1 \
