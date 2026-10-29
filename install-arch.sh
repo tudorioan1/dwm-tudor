@@ -11,8 +11,11 @@ warn() { printf "${YELLOW}[WARN]${NC} %s\n" "$1"; }
 err()  { printf "${RED}[ERROR]${NC} %s\n" "$1"; }
 source "$REPO_DIR/scripts/post-install.sh"
 
-# Packages for the optional GTK look (used by setup_gtk_look in scripts/post-install.sh)
-install_gtk_theme_packages() { install_packages materia-gtk-theme papirus-icon-theme; }
+# Packages for the optional GTK look (used by setup_gtk_look in scripts/post-install.sh): the
+# Papirus icons, plus what building Materia from its GitHub repo needs (Meson, Ninja, npm for
+# Sass, and the GTK2 engine + base themes it relies on). Materia and Bibata themselves are not
+# packages: they are fetched from GitHub.
+install_gtk_theme_packages() { install_packages papirus-icon-theme meson ninja npm gnome-themes-extra gtk-engine-murrine; }
 
 command -v pacman &>/dev/null || { err "This installer requires Arch Linux (pacman not found)."; exit 1; }
 
