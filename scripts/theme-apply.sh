@@ -277,6 +277,47 @@ fi
 
 
 # ══════════════════════════════════════════════════════════════════════════════
+# DUNST (notifications) — colours follow the theme
+# ══════════════════════════════════════════════════════════════════════════════
+# dunstrc used to carry fixed colours (always near-black). Rewrite only the colour keys, in the
+# [global] and [urgency_*] sections, from the same palette as the Polybar; everything else in
+# the file is left untouched. A read-only dunstrc must never abort the script.
+apply_dunst_theme() {
+    local rc="${XDG_CONFIG_HOME:-$HOME/.config}/dunst/dunstrc" new
+    [[ -f "$rc" ]] || return 0
+    [[ -n "$PB_BG" && -n "$PB_FG" && -n "$PB_ACCENT" && -n "$PB_FG_ALT" && -n "$PB_URGENT" ]] || return 0
+    new="$(mktemp)"
+    awk -v bg="$PB_BG" -v fg="$PB_FG" -v accent="$PB_ACCENT" -v dim="$PB_FG_ALT" -v urgent="$PB_URGENT" '
+        function key(l,   k) { k = l; sub(/^[ \t]*/, "", k); sub(/[ \t]*=.*$/, "", k); return k }
+        /^\[/ { sec = $0; print; next }
+        {
+            k = key($0)
+            if (sec == "[global]" && k == "frame_color") { print "frame_color = \"" accent "\""; next }
+            if (sec == "[urgency_low]" || sec == "[urgency_normal]") {
+                fc = (sec == "[urgency_low]") ? dim : accent
+                if (k == "background") { print "    background = \"" bg "\""; print "    frame_color = \"" fc "\""; next }
+                if (k == "foreground") { print "    foreground = \"" fg "\""; next }
+                if (k == "frame_color") next
+            }
+            if (sec == "[urgency_critical]") {
+                if (k == "background") { print "    background = \"" bg "\""; next }
+                if (k == "foreground") { print "    foreground = \"" urgent "\""; next }
+                if (k == "frame_color") { print "    frame_color = \"" urgent "\""; next }
+            }
+            print
+        }' "$rc" > "$new"
+    if [[ -s "$new" ]] && ! cmp -s "$new" "$rc"; then
+        cat "$new" > "$rc"
+        # apply to the running daemon (dunstctl reload, else restart it)
+        if pgrep -u "$(id -u)" -x dunst >/dev/null 2>&1; then
+            dunstctl reload 2>/dev/null || { pkill -u "$(id -u)" -x dunst; setsid dunst >/dev/null 2>&1 & }
+        fi
+    fi
+    rm -f "$new"
+}
+apply_dunst_theme || echo "theme-apply: could not update dunstrc - skipped" >&2
+
+# ══════════════════════════════════════════════════════════════════════════════
 # GTK DARK / LIGHT MODE
 # ══════════════════════════════════════════════════════════════════════════════
 if [[ "$DARK_MODE" == "true" ]]; then
