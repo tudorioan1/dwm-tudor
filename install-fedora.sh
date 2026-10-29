@@ -80,8 +80,11 @@ install_from_copr() {
     install_packages "$@" && ok "Installed from COPR $copr: $*"
 }
 
-# Packages for the optional GTK look (used by setup_gtk_look in scripts/post-install.sh)
-install_gtk_theme_packages() { install_packages materia-gtk-theme papirus-icon-theme; }
+# Packages for the optional GTK look (used by setup_gtk_look in scripts/post-install.sh): the
+# Papirus icons, plus what building Materia from its GitHub repo needs (Meson, Ninja, npm for
+# Sass, and the GTK2 engine + base themes it relies on). Materia and Bibata themselves are not
+# packages: they are fetched from GitHub.
+install_gtk_theme_packages() { install_packages papirus-icon-theme meson ninja-build npm gnome-themes-extra gtk-murrine-engine; }
 
 BG_DIR="$HOME/Pictures/backgrounds"
 FONT_DIR="$HOME/.local/share/fonts"
