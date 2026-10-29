@@ -350,7 +350,7 @@ FloatingWindow {
             Text {
                 width: parent.width
                 height: 22
-                text: folderModel.count + " images   |   click = set image as background   |   Esc = close   | backend = feh "
+                text: folderModel.count + " images   |   backend = feh "
                 color: win.dim
                 font.pixelSize: 11
                 verticalAlignment: Text.AlignVCenter
