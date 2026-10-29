@@ -4,8 +4,8 @@
 # Sourced by install-arch.sh / install-debian.sh / install-fedora.sh.
 #
 # The caller provides info / ok / warn and (for the GTK step) a distro-specific
-# install_gtk_theme_packages(). Every public function returns 0: a skipped or failed
-# optional step never aborts the installer.
+# install_gtk_theme_packages() (Papirus + the build prerequisites of the Materia theme).
+# Every public function returns 0: a skipped or failed optional step never aborts the installer.
 # ─────────────────────────────────────────────────────────
 
 # confirm "<question>": yes by default (just press Enter). With no terminal (piped or
@@ -161,23 +161,54 @@ _theme_dir_exists() {
     return 1
 }
 
-# Bibata is not in the Debian/Fedora/Arch repos in a usable form (AUR only on Arch), so every
-# distro takes the same upstream archive. Only the one variant we need is unpacked.
+# Bibata cursor: official method from the project's README - download the release archive of
+# the variant and unpack it into ~/.local/share/icons. The release has one archive per variant
+# (Bibata-Modern-Ice.tar.xz, Bibata-Modern-Classic.tar.xz, ...), there is no all-in-one file.
 _fetch_bibata() {
     local name="$1" dest="$HOME/.local/share/icons" tmp
+    local url="https://github.com/ful1e5/Bibata_Cursor/releases/latest/download/${name}.tar.xz"
     _theme_dir_exists icons "$name" && return 0
-    if ! command -v curl &>/dev/null; then
-        warn "curl not found - cannot download the Bibata cursor."
+    if ! command -v curl &>/dev/null || ! command -v xz &>/dev/null; then
+        warn "curl and xz are needed to install the Bibata cursor - skipping it."
         return 0
     fi
-    info "Downloading the Bibata cursor theme..."
+    info "Downloading the Bibata cursor ($name) from GitHub..."
     tmp="$(mktemp -d)"
-    if curl -fL --retry 3 -o "$tmp/Bibata.tar.xz" \
-            "https://github.com/ful1e5/Bibata_Cursor/releases/latest/download/Bibata.tar.xz" \
-       && mkdir -p "$dest" && tar -xJf "$tmp/Bibata.tar.xz" -C "$dest" "$name"; then
+    if curl -fL --retry 3 -o "$tmp/$name.tar.xz" "$url" \
+       && mkdir -p "$dest" && tar -xJf "$tmp/$name.tar.xz" -C "$dest" \
+       && _theme_dir_exists icons "$name"; then
         ok "$name installed in $dest."
     else
-        warn "Could not install $name (needs curl and xz). Get Bibata.tar.xz from https://github.com/ful1e5/Bibata_Cursor/releases and unpack $name into $dest"
+        warn "Could not install $name. Download $name.tar.xz from https://github.com/ful1e5/Bibata_Cursor/releases and unpack it into $dest"
+    fi
+    rm -rf "$tmp"
+    return 0
+}
+
+# Materia GTK theme: built from the official GitHub repository with Meson, exactly as its
+# INSTALL.md describes, into the user's ~/.local (no sudo needed). The distro packages are not
+# an option: the name differs per distro and Fedora does not ship it. Needs meson, ninja and
+# npm (or dart-sass), which install_gtk_theme_packages() provides.
+_install_materia() {
+    local name="$1" tmp log
+    _theme_dir_exists themes "$name" && return 0
+    if ! command -v git &>/dev/null || ! command -v meson &>/dev/null; then
+        warn "git and meson are needed to build the $name theme - skipping it."
+        return 0
+    fi
+    info "Building the Materia GTK theme from GitHub (takes about a minute)..."
+    tmp="$(mktemp -d)"
+    log="$tmp/build.log"
+    if git clone --depth 1 https://github.com/nana-4/materia-theme "$tmp/materia-theme" >"$log" 2>&1 \
+       && ( cd "$tmp/materia-theme" \
+            && meson setup _build -Dprefix="$HOME/.local" -Dcolors=dark -Dsizes=default \
+            && meson install -C _build ) >>"$log" 2>&1 \
+       && _theme_dir_exists themes "$name"; then
+        ok "$name installed in ~/.local/share/themes."
+    else
+        warn "Could not build $name. End of the build log:"
+        tail -n 12 "$log" | sed 's/^/    /'
+        warn "Manual instructions: https://github.com/nana-4/materia-theme/blob/master/INSTALL.md"
     fi
     rm -rf "$tmp"
     return 0
@@ -229,9 +260,12 @@ setup_gtk_look() {
         return 0
     fi
 
+    # Papirus comes from the distro packages (same name everywhere); the hook also installs what
+    # the Materia build needs. Materia and Bibata are fetched from their official GitHub projects.
     if declare -F install_gtk_theme_packages >/dev/null; then
         install_gtk_theme_packages || warn "Some GTK packages could not be installed."
     fi
+    _install_materia "$theme"
     _fetch_bibata "$cursor"
 
     # only apply the parts that are really installed
