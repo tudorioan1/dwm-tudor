@@ -73,8 +73,11 @@ echo "╚═══════════════════════�
 echo ""
 info "Package manager: $PKG_CMD"
 
-# Packages for the optional GTK look (used by setup_gtk_look in scripts/post-install.sh)
-install_gtk_theme_packages() { install_packages materia-gtk-theme papirus-icon-theme; }
+# Packages for the optional GTK look (used by setup_gtk_look in scripts/post-install.sh): the
+# Papirus icons, plus what building Materia from its GitHub repo needs (Meson, Ninja, npm for
+# Sass, and the GTK2 engine + base themes it relies on). Materia and Bibata themselves are not
+# packages: they are fetched from GitHub.
+install_gtk_theme_packages() { install_packages papirus-icon-theme meson ninja-build npm gnome-themes-extra gtk2-engines-murrine; }
 
 # ── Refresh package lists ─────────────────────────────────
 # Unlike pacman/dnf, apt needs an explicit metadata refresh or a fresh
