@@ -29,7 +29,7 @@ A functional, minimalist and super fast desktop experience based on Suckless' DW
 - **Multi-monitor** — Xinerama support with per-monitor Polybar bars
 - **Live theming** — 15 themes that restyle dwm, Polybar, rofi and the terminal at once
 - **Control Center** — rofi-based menu (<kbd>SUPER</kbd> + <kbd>F1</kbd>) for themes, system health and quick actions
-- **Wallpaper picker** — Quickshell grid opened from Polybar; it follows the colors of the active theme (black if none is found) and closes with the X button in its top-right corner or <kbd>Esc</kbd>
+- **Wallpaper picker** — Quickshell grid opened from Polybar; it follows the colors of the active theme (black if none is found)
 
 ## Installation
 
