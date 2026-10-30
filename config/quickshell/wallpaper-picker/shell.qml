@@ -128,7 +128,7 @@ FloatingWindow {
                 anchors.left: parent.left
                 anchors.leftMargin: 14
                 anchors.verticalCenter: parent.verticalCenter
-                text: "DWM Wallpaper Picker"
+                text: "Wallpaper picker"
                 color: win.dim
                 font.pixelSize: 12
             }
@@ -350,7 +350,7 @@ FloatingWindow {
             Text {
                 width: parent.width
                 height: 22
-                text: folderModel.count + " images   |   backend = feh "
+                text: folderModel.count + " images   |   click = set image as background   |   Esc = close   | backend = feh "
                 color: win.dim
                 font.pixelSize: 11
                 verticalAlignment: Text.AlignVCenter
