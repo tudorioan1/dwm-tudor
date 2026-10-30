@@ -49,7 +49,7 @@ Debian/Ubuntu :
 ```bash
 git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./install-debian.sh && ./install-debian.sh
 ```
-openSUSE Tumbleweed :
+openSUSE Tumbleweed (broken, to be fixed) :
 ```bash
 git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./install-opensuse.sh && ./install-opensuse.sh
 ```
