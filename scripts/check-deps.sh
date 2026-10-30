@@ -1,6 +1,6 @@
 #!/bin/bash
 # ─────────────────────────────────────────────────────────
-# dwm-tudor dependency checker — Arch Linux, Debian/Ubuntu & Fedora
+# dwm-tudor dependency checker — Arch Linux, Debian/Ubuntu, Fedora & openSUSE
 # Run before building to verify all required packages
 # are installed. Exit code 0 = all good, 1 = missing deps.
 # ─────────────────────────────────────────────────────────
@@ -19,6 +19,8 @@ detect_distro() {
         case "$ID" in
             arch|archarm|endeavouros|manjaro|garuda|artix)
                 echo "arch"; return ;;
+            opensuse*|suse|sles|sled)
+                echo "suse"; return ;;
             fedora|rhel|centos|rocky|almalinux|nobara)
                 echo "fedora"; return ;;
             debian|ubuntu|linuxmint|pop|raspbian|kali|zorin|elementary|neon)
@@ -26,6 +28,7 @@ detect_distro() {
         esac
         case "$ID_LIKE" in
             *arch*) echo "arch"; return ;;
+            *suse*) echo "suse"; return ;;
             *fedora*|*rhel*) echo "fedora"; return ;;
             *debian*|*ubuntu*) echo "debian"; return ;;
         esac
@@ -34,6 +37,8 @@ detect_distro() {
         echo "arch"; return
     elif command -v apt-get &>/dev/null || command -v dpkg &>/dev/null; then
         echo "debian"; return
+    elif command -v zypper &>/dev/null; then
+        echo "suse"; return
     elif command -v dnf &>/dev/null || command -v rpm &>/dev/null; then
         echo "fedora"; return
     fi
@@ -43,7 +48,7 @@ detect_distro() {
 DISTRO=$(detect_distro)
 
 if [ "$DISTRO" = "unknown" ]; then
-    printf "${RED}Unsupported distribution.${NC} This script supports Arch Linux, Debian/Ubuntu and Fedora only.\n"
+    printf "${RED}Unsupported distribution.${NC} This script supports Arch Linux, Debian/Ubuntu, Fedora and openSUSE only.\n"
     exit 1
 fi
 
@@ -67,6 +72,18 @@ declare -A PKG_DEBIAN=(
     [xcb-util]="libxcb-util-dev"
     [freetype2]="libfreetype-dev|libfreetype6-dev"
     [fontconfig]="libfontconfig-dev|libfontconfig1-dev"
+)
+# openSUSE: the libraries are checked as pkg-config capabilities (rpm resolves them to whatever
+# -devel package provides them), so this does not depend on openSUSE's package names
+declare -A PKG_SUSE=(
+    [libx11]="pkgconfig(x11)"
+    [libxft]="pkgconfig(xft)"
+    [libxinerama]="pkgconfig(xinerama)"
+    [imlib2]="pkgconfig(imlib2)"
+    [libxcb]="pkgconfig(xcb)"
+    [xcb-util]="pkgconfig(xcb-util)"
+    [freetype2]="pkgconfig(freetype2)"
+    [fontconfig]="pkgconfig(fontconfig)"
 )
 declare -A PKG_FEDORA=(
     [libx11]="libX11-devel"
@@ -93,6 +110,7 @@ pkg_installed() {
     case "$DISTRO" in
         arch)   pacman -Qi "$1" &>/dev/null ;;
         debian) [[ "$(dpkg-query -W -f='${Status}' "$1" 2>/dev/null)" == "install ok installed" ]] ;;
+        suse)   rpm -q "$1" &>/dev/null || rpm -q --whatprovides "$1" &>/dev/null ;;
         *)      rpm -q "$1" &>/dev/null ;;
     esac
 }
@@ -121,6 +139,7 @@ check_dep() {
     case "$DISTRO" in
         arch)   pkg="${PKG_ARCH[$generic]:-$generic}" ;;
         debian) pkg="${PKG_DEBIAN[$generic]:-$generic}" ;;
+        suse)   pkg="${PKG_SUSE[$generic]:-$generic}" ;;
         *)      pkg="${PKG_FEDORA[$generic]:-$generic}" ;;
     esac
     check_pkg "$pkg"
@@ -141,6 +160,16 @@ check_base_devel() {
             printf "  ${RED}✗${NC} build-essential ${YELLOW}(not installed)${NC}\n"
             MISSING=$((MISSING + 1))
         fi
+    elif [ "$DISTRO" = "suse" ]; then
+        local t
+        for t in gcc make; do
+            if pkg_installed "$t"; then
+                printf "  ${GREEN}✓${NC} %s\n" "$t"
+            else
+                printf "  ${RED}✗${NC} %s ${YELLOW}(not installed)${NC}\n" "$t"
+                MISSING=$((MISSING + 1))
+            fi
+        done
     else
         if dnf group list --installed 2>/dev/null | grep -qi "Development Tools"; then
             printf "  ${GREEN}✓${NC} Development Tools (group)\n"
@@ -164,6 +193,7 @@ echo ""
 case "$DISTRO" in
     arch)   echo "═══ dwm-tudor Dependency Check (Arch Linux) ═══" ;;
     debian) echo "═══ dwm-tudor Dependency Check (Debian/Ubuntu) ═══" ;;
+    suse)   echo "═══ dwm-tudor Dependency Check (openSUSE) ═══" ;;
     *)      echo "═══ dwm-tudor Dependency Check (Fedora) ═══" ;;
 esac
 echo ""
@@ -219,17 +249,19 @@ elif [ "$DISTRO" = "debian" ]; then
     check_cmd "xset"
     check_cmd "xsetroot"
 else
-    # Fedora: Xlibre isn't packaged upstream, but check for it just in case
+    # Fedora / openSUSE: Xlibre isn't packaged upstream, but check for it just in case
     # someone built/installed it manually. xrandr/xset/xsetroot ship together
     # in xorg-x11-server-utils on Fedora, so check the binaries directly.
+    XORG_PKG="xorg-x11-server-Xorg"
+    if [ "$DISTRO" = "suse" ]; then XORG_PKG="xorg-x11-server"; fi
     if command -v Xlibre &>/dev/null; then
         printf "  ${GREEN}✓${NC} Xlibre detected\n"
-    elif rpm -q xorg-x11-server-Xorg &>/dev/null; then
-        printf "  ${GREEN}✓${NC} xorg-x11-server-Xorg\n"
+    elif rpm -q "$XORG_PKG" &>/dev/null; then
+        printf "  ${GREEN}✓${NC} %s\n" "$XORG_PKG"
     elif command -v Xorg &>/dev/null; then
         printf "  ${GREEN}✓${NC} Xorg binary found\n"
     else
-        printf "  ${RED}✗${NC} xorg-x11-server-Xorg ${YELLOW}(not installed)${NC}\n"
+        printf "  ${RED}✗${NC} %s ${YELLOW}(not installed)${NC}\n" "$XORG_PKG"
         MISSING=$((MISSING + 1))
     fi
     check_cmd "startx"
@@ -294,6 +326,7 @@ echo ""
 case "$DISTRO" in
     arch)   INSTALL_HINT="sudo pacman -S <package>"; INSTALLER="./install-arch.sh" ;;
     debian) INSTALL_HINT="sudo apt install <package>"; INSTALLER="./install-debian.sh" ;;
+    suse)   INSTALL_HINT="sudo zypper install <package>"; INSTALLER="./install-opensuse.sh" ;;
     *)      INSTALL_HINT="sudo dnf install <package>"; INSTALLER="./install-fedora.sh" ;;
 esac
 

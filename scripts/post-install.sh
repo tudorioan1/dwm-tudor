@@ -17,6 +17,64 @@ confirm() {
     case "$reply" in [nN]*) return 1 ;; *) return 0 ;; esac
 }
 
+# ═════════════════════════ Backup of your existing files ═════════════════════════
+# Everything the installer (make install) or the optional steps below may overwrite or edit is
+# copied first to ~/backup-files/<date-time>/, keeping its path relative to your home. It is a
+# COPY, not a move: ~/.config/dwm-tudor (your hotkeys, themes, rules) is preserved by
+# `make install`, so moving it away would reset your settings. Symlinked dotfiles are
+# followed (-L): make install writes THROUGH a symlink, so the real files need saving.
+BACKUP_ROOT="${DWM_BACKUP_ROOT:-$HOME/backup-files}"
+BACKUP_DIR=""
+
+_backup_candidates() {
+    cat <<'EOF'
+.xinitrc
+.bashrc
+.gtkrc-2.0
+.icons/default/index.theme
+.config/alacritty
+.config/kitty
+.config/ghostty
+.config/polybar
+.config/rofi
+.config/dunst
+.config/picom
+.config/quickshell
+.config/dwm-tudor
+.config/gtk-3.0/settings.ini
+.config/gtk-4.0/settings.ini
+.config/qt5ct
+.config/qt6ct
+EOF
+}
+
+backup_user_files() {
+    local rel list=() stamp
+    while IFS= read -r rel; do
+        if [ -e "$HOME/$rel" ] || [ -L "$HOME/$rel" ]; then list+=("$rel"); fi
+    done < <(_backup_candidates)
+    if [ "${#list[@]}" -eq 0 ]; then
+        info "No existing configuration to back up."
+        return 0
+    fi
+    stamp="$(date +%Y-%m-%d_%H-%M-%S)"
+    BACKUP_DIR="$BACKUP_ROOT/$stamp"
+    if ! mkdir -p "$BACKUP_DIR"; then
+        warn "Could not create $BACKUP_DIR - continuing without a backup."
+        BACKUP_DIR=""
+        return 0
+    fi
+    for rel in "${list[@]}"; do
+        ( cd "$HOME" && { cp -aL --parents "$rel" "$BACKUP_DIR/" 2>/dev/null || cp -a --parents "$rel" "$BACKUP_DIR/"; } ) \
+            || warn "Could not back up ~/$rel"
+    done
+    echo ""
+    ok "Your original files that the installer will change were backed up to: $BACKUP_DIR"
+    printf '      ~/%s\n' "${list[@]}"
+    echo ""
+    return 0
+}
+
 # ═════════════════════════ Bash prompt ═════════════════════════
 setup_bash_prompt() {
     local dir="$HOME/mybash"
@@ -191,7 +249,8 @@ _fetch_bibata() {
 # npm (or dart-sass), which install_gtk_theme_packages() provides.
 _install_materia() {
     local name="$1" tmp log
-    _theme_dir_exists themes "$name" && return 0
+    # both variants are needed: theme-apply.sh switches Materia-dark <-> Materia-light with the theme
+    if _theme_dir_exists themes "$name" && _theme_dir_exists themes "Materia-light"; then return 0; fi
     if ! command -v git &>/dev/null || ! command -v meson &>/dev/null; then
         warn "git and meson are needed to build the $name theme - skipping it."
         return 0
@@ -201,7 +260,7 @@ _install_materia() {
     log="$tmp/build.log"
     if git clone --depth 1 https://github.com/nana-4/materia-theme "$tmp/materia-theme" >"$log" 2>&1 \
        && ( cd "$tmp/materia-theme" \
-            && meson setup _build -Dprefix="$HOME/.local" -Dcolors=dark -Dsizes=default \
+            && meson setup _build -Dprefix="$HOME/.local" -Dcolors=dark,light -Dsizes=default \
             && meson install -C _build ) >>"$log" 2>&1 \
        && _theme_dir_exists themes "$name"; then
         ok "$name installed in ~/.local/share/themes."

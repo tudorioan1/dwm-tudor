@@ -106,7 +106,7 @@ notify() {
 }
 
 # ── Distro detection (/etc/os-release) ───────────────────
-# Sets DISTRO_FAMILY (arch | debian | fedora | unknown) and DISTRO_NAME.
+# Sets DISTRO_FAMILY (arch | debian | fedora | suse | unknown) and DISTRO_NAME.
 # Derivatives are matched through ID_LIKE (Ubuntu, Mint, Manjaro, Rocky...).
 DISTRO_FAMILY="unknown"
 DISTRO_NAME="Unknown"
@@ -130,6 +130,8 @@ detect_distro() {
                 DISTRO_FAMILY="arch"; break ;;
             debian|ubuntu|linuxmint|pop|raspbian|kali|zorin|elementary|neon)
                 DISTRO_FAMILY="debian"; break ;;
+            opensuse*|suse|sles|sled)
+                DISTRO_FAMILY="suse"; break ;;
             fedora|rhel|centos|rocky|almalinux|nobara)
                 DISTRO_FAMILY="fedora"; break ;;
         esac
@@ -144,6 +146,7 @@ installer_script() {
         arch)   echo "install-arch.sh"   ;;
         debian) echo "install-debian.sh" ;;
         fedora) echo "install-fedora.sh" ;;
+        suse)   echo "install-opensuse.sh" ;;
     esac
     return 0
 }
@@ -165,7 +168,7 @@ run_installer() {
     local script dir
     script="$(installer_script)"
     if [ -z "$script" ]; then
-        notify "No installer for $DISTRO_NAME" "Supported: Arch, Debian/Ubuntu, Fedora" --urgency=critical
+        notify "No installer for $DISTRO_NAME" "Supported: Arch, Debian/Ubuntu, Fedora, openSUSE" --urgency=critical
         return 0
     fi
     if ! dir="$(find_repo_file "$script")"; then
@@ -213,6 +216,7 @@ run_health_check() {
             arch)   pacman -Qi "$1" &>/dev/null ;;
             debian) [[ "$(dpkg-query -W -f='${Status}' "$1" 2>/dev/null)" == "install ok installed" ]] ;;
             fedora) rpm -q "$1" &>/dev/null ;;
+            suse)   rpm -q "$1" &>/dev/null || rpm -q --whatprovides "$1" &>/dev/null ;;
             *)      return 1 ;;
         esac
     }
@@ -222,7 +226,7 @@ run_health_check() {
         case "$DISTRO_FAMILY" in
             arch)   pacman -Qq 2>/dev/null ;;
             debian) dpkg-query -W -f='${Package}\n' 2>/dev/null ;;
-            fedora) rpm -qa --qf '%{NAME}\n' 2>/dev/null ;;
+            fedora|suse) rpm -qa --qf '%{NAME}\n' 2>/dev/null ;;
         esac
         return 0
     }
@@ -237,6 +241,8 @@ run_health_check() {
             arch)   names="$arch_n" ;;
             debian) names="$deb_n"  ;;
             fedora) names="$fed_n"  ;;
+            suse)   # openSUSE: libraries as pkg-config capabilities (resolved by rpm), others by the Fedora name
+                    if [ -n "$pc" ]; then names="pkgconfig($pc)"; else names="$fed_n"; fi ;;
             *)
                 if [ -n "$pc" ] && command -v pkg-config &>/dev/null; then
                     if pkg-config --exists "$pc" 2>/dev/null; then
@@ -334,6 +340,7 @@ run_health_check() {
         arch)   xorg_pkg="xorg-server" ;;
         debian) xorg_pkg="xserver-xorg-core" ;;
         fedora) xorg_pkg="xorg-x11-server-Xorg" ;;
+        suse)   xorg_pkg="xorg-x11-server" ;;
     esac
     if [ -n "$xlibre_pkg" ]; then
         _ok "Xlibre detected ($xlibre_pkg)"
