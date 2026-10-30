@@ -1,10 +1,18 @@
 #!/bin/bash
 
-# Color configuration (using colors from colors.ini)
-COLOR_ACTIVE="${DWM_TAG_ACTIVE_COLOR:-#eceff4}"      # white from colors.ini
-COLOR_OCCUPIED="${DWM_TAG_OCCUPIED_COLOR:-#d8dee9}"  # fg from colors.ini
-COLOR_URGENT="${DWM_TAG_URGENT_COLOR:-#bf616a}"      # red from colors.ini
-COLOR_EMPTY="${DWM_TAG_EMPTY_COLOR:-#4c566a}"        # fg-alt from colors.ini
+# Colours follow the active theme: they are read from polybar's generated colors.ini
+# (written by theme-apply.sh), so they work on light and dark themes alike. Setting
+# DWM_TAG_*_COLOR in dwm-tags.ini still overrides them.
+PB_COLORS_FILE="${XDG_CONFIG_HOME:-$HOME/.config}/polybar/themes/minimal/colors.ini"
+pb_color() {   # pb_color <key> <fallback>
+    local v
+    v="$(sed -n "s/^$1[[:space:]]*=[[:space:]]*\(#[0-9A-Fa-f]\{6\}\).*/\1/p" "$PB_COLORS_FILE" 2>/dev/null | head -n1)"
+    printf '%s' "${v:-$2}"
+}
+COLOR_ACTIVE="${DWM_TAG_ACTIVE_COLOR:-$(pb_color blue '#eceff4')}"        # accent
+COLOR_OCCUPIED="${DWM_TAG_OCCUPIED_COLOR:-$(pb_color fg '#d8dee9')}"      # fg
+COLOR_URGENT="${DWM_TAG_URGENT_COLOR:-$(pb_color red '#bf616a')}"         # red
+COLOR_EMPTY="${DWM_TAG_EMPTY_COLOR:-$(pb_color fg-alt '#4c566a')}"        # fg-alt
 FONT_ACTIVE="${DWM_TAG_ACTIVE_FONT:-2}"              # Font index for active
 FONT_OCCUPIED="${DWM_TAG_OCCUPIED_FONT:-4}"          # Font index for occupied
 FONT_URGENT="${DWM_TAG_URGENT_FONT:-3}"              # Font index for urgent
