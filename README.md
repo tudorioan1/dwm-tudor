@@ -49,7 +49,8 @@ Debian/Ubuntu :
 ```bash
 git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./install-debian.sh && ./install-debian.sh
 ```
-openSUSE Tumbleweed (Unstable) :
+## Beta installers (to be fixed, not recommended)
+openSUSE Tumbleweed :
 ```bash
 git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./install-opensuse.sh && ./install-opensuse.sh
 ```
