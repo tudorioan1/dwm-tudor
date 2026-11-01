@@ -7,7 +7,6 @@
 </div>
 
 ---
-![Visitor Count](https://visitor-badge.laobi.icu/badge?page_id=tudorioan1.dwm-tudor)
 ![Visitor Count](https://api.visitorbadge.io/api/visitors?path=tudorioan1.dwm-tudor&countColor=%23263759)
 > **Note:** This is a personal project and still a work in progress. It is built around my own workflow and assumes some familiarity with Linux and window managers, so a little troubleshooting after installing is to be expected.
 
