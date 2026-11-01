@@ -27,11 +27,42 @@ fi
 # Packages that could not be installed; listed in a summary at the end of the run.
 FAILED_PKGS=()
 
+# zy_install [-q] <pkg>...: zypper install that never does more than was asked.
+# zypper's solver can decide to REMOVE packages, change their vendor or downgrade them to satisfy an
+# install - and unattended (--non-interactive) it just goes ahead. On a desktop that is how the X
+# stack (xorg-x11-server, Mesa, GPU drivers) gets replaced behind your back. So the transaction is
+# previewed first (--dry-run); if it contains anything but plain installs, it is shown and only run
+# after an explicit "yes" (default no). With -q (quiet fallbacks) or without a terminal it is refused.
+zy_install() {
+    local quiet=0 plan risky
+    if [ "${1:-}" = "-q" ]; then quiet=1; shift; fi
+    plan="$(sudo zypper --non-interactive install --dry-run --auto-agree-with-licenses "$@" 2>&1)" || true
+    risky="$(printf '%s\n' "$plan" | awk '
+        /going to be REMOVED|going to change vendor|going to be downgraded|going to change architecture/ { p = 1; print; next }
+        /^The following/ { p = 0 }
+        /^[[:space:]]*$/ { p = 0 }
+        p { print }')"
+    if [ -n "$risky" ]; then
+        if [ "$quiet" = 1 ]; then return 1; fi
+        warn "zypper wants to do more than install: $*"
+        printf '%s\n' "$risky" | sed 's/^/      /'
+        if ! confirm "Run it anyway?" no; then
+            warn "Skipped: $*"
+            return 1
+        fi
+    fi
+    if [ "$quiet" = 1 ]; then
+        sudo zypper --non-interactive install --auto-agree-with-licenses "$@" >/dev/null 2>&1
+    else
+        sudo zypper --non-interactive install --auto-agree-with-licenses "$@"
+    fi
+}
+
 # Install a batch; if zypper rejects the batch because ONE package is unknown, retry one
 # by one so a single missing package no longer aborts the whole install.
 # Returns non-zero if anything failed, and remembers what in FAILED_PKGS.
 install_packages() {
-    sudo zypper --non-interactive install --auto-agree-with-licenses "$@" && return 0
+    zy_install "$@" && return 0
     if [ "$#" -eq 1 ]; then
         warn "Could not install: $1"
         FAILED_PKGS+=("$1")
@@ -40,21 +71,21 @@ install_packages() {
     warn "Batch install failed - retrying package by package..."
     local p rc=0
     for p in "$@"; do
-        sudo zypper --non-interactive install --auto-agree-with-licenses "$p" || { warn "Could not install: $p"; FAILED_PKGS+=("$p"); rc=1; }
+        zy_install "$p" || { warn "Could not install: $p"; FAILED_PKGS+=("$p"); rc=1; }
     done
     return $rc
 }
 
 # try_install <pkg>...: quiet attempt with no bookkeeping, for "official repo first,
 # then somewhere else" fallbacks.
-try_install() { sudo zypper --non-interactive install --auto-agree-with-licenses "$@" >/dev/null 2>&1; }
+try_install() { zy_install -q "$@"; }
 
 # install_any <pkg> [<alternative>...]: install the first one that works (e.g. qt6ct, else
 # qt5ct). Only counts as a failure if none of them can be installed.
 install_any() {
     local p
     for p in "$@"; do
-        if sudo zypper --non-interactive install --auto-agree-with-licenses "$p" 2>/dev/null; then return 0; fi
+        if zy_install -q "$p"; then return 0; fi
     done
     warn "Could not install any of: $*"
     FAILED_PKGS+=("$1")
@@ -62,16 +93,18 @@ install_any() {
 }
 
 # (confirm() comes from scripts/post-install.sh)
-# install_from_obs <repo-url> <pkg>...: add a third-party Open Build Service repository (after
-# asking) and install from it.
+# install_from_obs <repo-url> <pkg>...: add a third-party Open Build Service repository (only after an
+# explicit yes - the default answer is no) and install from it. The repository gets a low priority
+# (200, the default is 99) so it can only supply packages the official repositories do not have, and
+# zy_install still refuses any transaction that would remove or replace something.
 install_from_obs() {
     local url="$1"; shift
-    if ! confirm "Add the third-party OBS repository $url to install: $*?"; then
+    if ! confirm "Add the third-party OBS repository $url (low priority) to install: $*?" no; then
         warn "Skipped: $*  (add it later with: sudo zypper addrepo $url)"
         FAILED_PKGS+=("$@")
         return 1
     fi
-    sudo zypper --non-interactive --gpg-auto-import-keys addrepo --refresh "$url" >/dev/null 2>&1 || true   # may already exist
+    sudo zypper --non-interactive --gpg-auto-import-keys addrepo --refresh --priority 200 "$url" >/dev/null 2>&1 || true   # may already exist
     if ! sudo zypper --non-interactive --gpg-auto-import-keys refresh; then
         warn "Could not refresh the repositories after adding $url."
         FAILED_PKGS+=("$@")
@@ -82,10 +115,11 @@ install_from_obs() {
 
 # Packages for the optional GTK look (used by setup_gtk_look in scripts/post-install.sh): the
 # Papirus icons, plus what building Materia from its GitHub repo needs (Meson, Ninja, npm for
-# Sass, and the GTK2 engine + base themes it relies on). Materia and Bibata themselves are not
+# Sass, and the GTK2 engine + base themes it relies on) and fontforge, which builds the Inter
+# Nerd Font Propo GTK font from source. Materia and Bibata themselves are not
 # packages: they are fetched from GitHub.
 install_gtk_theme_packages() {
-    install_packages papirus-icon-theme meson ninja gtk2-engine-murrine
+    install_packages papirus-icon-theme meson ninja gtk2-engine-murrine fontforge
     install_any npm-default npm24 npm22 npm20
 }
 
@@ -108,12 +142,18 @@ install_packages gcc make pkg-config \
     'pkgconfig(xcb)' 'pkgconfig(xcb-util)' 'pkgconfig(xcb-res)' 'pkgconfig(x11-xcb)' \
     'pkgconfig(freetype2)' 'pkgconfig(fontconfig)'
 
+# The X stack is left alone when it is already there: an X server that works must not be touched.
 if rpm -qa 2>/dev/null | grep -qi '^xlibre'; then
-    info "Xlibre detected — skipping xorg-x11-server."
-elif ! rpm -q xorg-x11-server &>/dev/null; then
+    info "Xlibre detected — not touching the X server."
+elif command -v Xorg &>/dev/null || [ -x /usr/bin/Xorg ] || rpm -q xorg-x11-server &>/dev/null; then
+    info "An X server is already installed — not touching it."
+else
     install_packages xorg-x11-server
 fi
-install_packages xinit xrandr xsetroot xset
+# Only the small X tools that are missing (each one is its own package on openSUSE)
+for pair in xinit:xinit xrandr:xrandr xsetroot:xsetroot xset:xset; do
+    command -v "${pair%%:*}" &>/dev/null || install_packages "${pair##*:}"
+done
 ok "Build dependencies installed."
 
 # ── Runtime dependencies ─────────────────────────────────

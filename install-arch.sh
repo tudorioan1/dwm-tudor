@@ -13,9 +13,10 @@ source "$REPO_DIR/scripts/post-install.sh"
 
 # Packages for the optional GTK look (used by setup_gtk_look in scripts/post-install.sh): the
 # Papirus icons, plus what building Materia from its GitHub repo needs (Meson, Ninja, npm for
-# Sass, and the GTK2 engine + base themes it relies on). Materia and Bibata themselves are not
+# Sass, and the GTK2 engine + base themes it relies on) and fontforge, which builds the Inter
+# Nerd Font Propo GTK font from source. Materia and Bibata themselves are not
 # packages: they are fetched from GitHub.
-install_gtk_theme_packages() { install_packages papirus-icon-theme meson ninja npm gnome-themes-extra gtk-engine-murrine; }
+install_gtk_theme_packages() { install_packages papirus-icon-theme meson ninja npm gnome-themes-extra gtk-engine-murrine fontforge; }
 
 command -v pacman &>/dev/null || { err "This installer requires Arch Linux (pacman not found)."; exit 1; }
 
@@ -118,6 +119,9 @@ else
     ok "SDDM installed and enabled."
 fi
 
+# ── Back up the files this install is about to change ─────
+backup_user_files
+
 # ── Build & Install ──────────────────────────────────────
 cd "$REPO_DIR"
 # Build as the normal user (root-owned objects break later rebuilds), install as root.
@@ -138,6 +142,9 @@ echo "║          Installation Complete!           ║"
 echo "╚═══════════════════════════════════════════╝"
 echo ""
 info "Detected: $DISTRO_NAME"
+if [ -n "${BACKUP_DIR:-}" ]; then
+    info "Your previous files were backed up to: $BACKUP_DIR"
+fi
 echo "  • Edit config.h to customize, then: make && sudo make install"
 echo "  • Log out and select 'dwm', or start with: startx"
 echo ""
