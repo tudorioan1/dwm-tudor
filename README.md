@@ -62,11 +62,11 @@ git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./
 - **Quickshell** (used by the wallpaper picker). On **Debian 13** the installer enables the official `trixie-backports` repository (it adds `/etc/apt/sources.list.d/debian-backports.sources`) and installs `quickshell` from it, together with the Qt QML modules it needs. Debian 12 is too old for Quickshell, and on Ubuntu older than 26.10 it has to be installed manually (the installer prints the PPA command).
 - `dwm-session` is installed by `make install`; no manual copy step is needed.
 
-### Questions asked at the end of the install
+### Optional settings (asked at the end of the installer)
 
 All three are optional: press <kbd>Enter</kbd> for yes, <kbd>n</kbd> for no. Nothing is changed when the installer runs without a terminal.
 
-- **GTK look:** *Materia-dark* theme, *Papirus-Dark* icons and the *Bibata-Modern-Ice* cursor (the cursor is downloaded from upstream; the theme and icons come from your distro's packages). If you answer no, your current GTK theme, icons and cursor stay as they are.
+- **GTK look:** *Materia-dark* theme, *Papirus-Dark* icons, *Inter NF Propo* fonts and the *Bibata-Modern-Ice* cursor (the cursor is downloaded from upstream; the theme and icons come from your distro's packages). If you answer no, your current GTK theme, icons and cursor stay as they are.
 - **Bash prompt:** installs my customised bash prompt from [tudorioan1/mybash](https://github.com/tudorioan1/mybash) (cloned to `~/mybash`).
 - **Default web browser:** the installer scans the browsers installed on your system (native, Flatpak and Snap) and lets you pick one. It becomes the system default (`xdg-settings`) and the `browser` variable in `~/.config/dwm-tudor/hotkeys.toml`, which <kbd>SUPER</kbd> + <kbd>B</kbd> uses.
 
