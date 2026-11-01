@@ -7,7 +7,7 @@
 </div>
 
 ---
-![Visitor Count](https://komarev.xyz/ghpvc?username=tudorioan1&repo=dwm-tudor&color=blue)
+![Visitor Count](https://visitor-badge.laobi.icu/badge?page_id=tudorioan1.dwm-tudor)
 > **Note:** This is a personal project and still a work in progress. It is built around my own workflow and assumes some familiarity with Linux and window managers, so a little troubleshooting after installing is to be expected.
 
 A functional, minimalist and super fast desktop experience built on the original Suckless DWM, that was heavily modified for my needs. It includes numerous patches and customizations for a productive workflow on **Arch Linux, Fedora and Debian/Ubuntu** with X11 (Wayland is not supported).
