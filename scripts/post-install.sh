@@ -8,11 +8,16 @@
 # Every public function returns 0: a skipped or failed optional step never aborts the installer.
 # ─────────────────────────────────────────────────────────
 
-# confirm "<question>": yes by default (just press Enter). With no terminal (piped or
-# unattended run) the answer is no, so nothing optional happens silently.
+# confirm "<question>" [no]: yes by default (just press Enter); pass "no" as the second argument
+# for questions that should default to no. With no terminal (piped or unattended run) the
+# answer is always no, so nothing optional happens silently.
 confirm() {
     [ -t 0 ] || return 1
     local reply
+    if [ "${2:-yes}" = "no" ]; then
+        read -r -p "$1 [y/N] " reply
+        case "$reply" in [yY]*) return 0 ;; *) return 1 ;; esac
+    fi
     read -r -p "$1 [Y/n] " reply
     case "$reply" in [nN]*) return 1 ;; *) return 0 ;; esac
 }
@@ -273,6 +278,68 @@ _install_materia() {
     return 0
 }
 
+# Inter Nerd Font Propo (the GTK font). The Nerd Fonts releases do not include Inter, so it is built
+# from source the way the Nerd Fonts project documents: take Inter from its official release,
+# take the Nerd Fonts font-patcher, and patch with --variable-width-glyphs, which is what makes the
+# "Nerd Font Propo" (proportional) family. Only Regular, Medium and Bold are patched: Medium is the
+# GTK font, Regular and Bold cover normal and bold text. Needs fontforge, curl and unzip; takes a
+# few minutes. Inter is pinned to a version because its release file names contain it.
+INTER_VERSION="4.1"
+_build_inter_font() {
+    local dest="$HOME/.local/share/fonts/InterNerdFontPropo" tmp patcher style src n=0
+    if fc-list 2>/dev/null | grep -qi "Inter Nerd Font Propo"; then return 0; fi
+    local tool
+    for tool in fontforge curl unzip; do
+        if ! command -v "$tool" &>/dev/null; then
+            warn "$tool is needed to build Inter Nerd Font Propo - skipping the font."
+            return 1
+        fi
+    done
+    info "Building Inter Nerd Font Propo from source (patching takes a few minutes)..."
+    tmp="$(mktemp -d)"
+    mkdir -p "$tmp/inter" "$tmp/patcher" "$tmp/out"
+    if ! curl -fL --retry 3 -o "$tmp/Inter.zip" \
+            "https://github.com/rsms/inter/releases/download/v${INTER_VERSION}/Inter-${INTER_VERSION}.zip" \
+       || ! curl -fL --retry 3 -o "$tmp/FontPatcher.zip" \
+            "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/FontPatcher.zip" \
+       || ! unzip -oq "$tmp/Inter.zip" -d "$tmp/inter" \
+       || ! unzip -oq "$tmp/FontPatcher.zip" -d "$tmp/patcher"; then
+        warn "Could not download Inter or the Nerd Fonts patcher - skipping the font."
+        rm -rf "$tmp"
+        return 1
+    fi
+    patcher="$(find "$tmp/patcher" -maxdepth 2 -name font-patcher -type f | head -n1)"
+    if [ -z "$patcher" ]; then
+        warn "font-patcher not found in FontPatcher.zip - skipping the font."
+        rm -rf "$tmp"
+        return 1
+    fi
+    for style in Regular Medium Bold; do
+        src="$(find "$tmp/inter" -type f -name "Inter-$style.otf" | head -n1)"
+        if [ -z "$src" ]; then src="$(find "$tmp/inter" -type f -name "Inter-$style.ttf" | head -n1)"; fi
+        if [ -z "$src" ]; then warn "Inter-$style not found in the Inter archive."; continue; fi
+        if ( cd "$tmp/patcher" && fontforge -quiet -script "$patcher" "$src" \
+                 --complete --variable-width-glyphs --quiet -out "$tmp/out" ) >"$tmp/patch-$style.log" 2>&1; then
+            n=$((n + 1))
+        else
+            warn "Patching Inter-$style failed:"
+            tail -n 4 "$tmp/patch-$style.log" | sed 's/^/    /'
+        fi
+    done
+    # the GTK font is the Medium weight: without it the whole font is not worth installing
+    if ! ls "$tmp"/out/*Medium* >/dev/null 2>&1; then n=0; warn "The Medium weight was not built."; fi
+    if [ "$n" -gt 0 ] && mkdir -p "$dest" && cp "$tmp"/out/* "$dest/"; then
+        fc-cache -f "$dest" >/dev/null 2>&1
+        ok "Inter Nerd Font Propo installed in $dest ($n of 3 styles)."
+    else
+        warn "No Inter Nerd Font Propo was built."
+        rm -rf "$tmp"
+        return 1
+    fi
+    rm -rf "$tmp"
+    return 0
+}
+
 # set or add key=value in the [Settings] group of a GTK ini file, keeping everything else
 _ini_set() {
     local file="$1" key="$2" value="$3"
@@ -311,11 +378,11 @@ _gsettings_set() {
 }
 
 setup_gtk_look() {
-    local theme="Materia-dark" icons="Papirus-Dark" cursor="Bibata-Modern-Ice"
+    local theme="Materia-dark" icons="Papirus-Dark" cursor="Bibata-Modern-Ice" font="Inter Nerd Font Propo Medium 12.5"
     local cfg="${XDG_CONFIG_HOME:-$HOME/.config}" ini set_list=""
     echo ""
-    if ! confirm "Do you want to set the GTK look ($theme theme, $icons icons, $cursor cursor)? If not, your current GTK theme, icons and cursor stay as they are."; then
-        info "Leaving the GTK theme, icons and cursor as they are."
+    if ! confirm "Do you want to set the GTK look ($theme theme, $icons icons, $cursor cursor, $font font)? If not, your current GTK theme, icons, cursor and font stay as they are."; then
+        info "Leaving the GTK theme, icons, cursor and font as they are."
         return 0
     fi
 
@@ -326,6 +393,7 @@ setup_gtk_look() {
     fi
     _install_materia "$theme"
     _fetch_bibata "$cursor"
+    _build_inter_font || true
 
     # only apply the parts that are really installed
     if _theme_dir_exists themes "$theme"; then
@@ -355,6 +423,15 @@ setup_gtk_look() {
         set_list="$set_list $cursor"
     else
         warn "Cursor theme $cursor is not installed - leaving the cursor as it is."
+    fi
+    # the font (its name has spaces, so it is reported on its own)
+    if fc-list 2>/dev/null | grep -qi "Inter Nerd Font Propo"; then
+        for ini in "$cfg/gtk-3.0/settings.ini" "$cfg/gtk-4.0/settings.ini"; do _ini_set "$ini" gtk-font-name "$font"; done
+        _gtkrc_set gtk-font-name "$font"
+        _gsettings_set font-name "$font"
+        ok "GTK font set: $font"
+    else
+        warn "Inter Nerd Font Propo is not installed - leaving the GTK font as it is."
     fi
     if [ -n "$set_list" ]; then
         set_list="${set_list# }"

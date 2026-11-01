@@ -8,17 +8,36 @@
 # "fixes" it. The wallpaper pixmap created by feh lives in video memory too.
 #
 # What it does: listens for systemd-logind's PrepareForSleep signal and, once the machine is
-# back, wakes the display, re-creates the wallpaper (~/.fehbg), resets picom (SIGUSR1
-# re-initialises its backend = full repaint) and forces an expose of every window.
+# back, wakes the display, re-creates the wallpaper (~/.fehbg), RESTARTS picom with the very
+# same command line it was running with (SIGUSR1 / a config reload was not enough: its GL state
+# does not survive the suspend) and forces an expose of every window.
 # Started from autostart.sh. Needs gdbus (glib) or dbus-monitor.
 # ─────────────────────────────────────────────────────────
 
+# Restart picom exactly as it was started (same flags, same binary). Does nothing if picom is not
+# running: it never starts a compositor the user does not use.
+restart_picom() {
+    local pid i
+    local -a args=()
+    pid="$(pgrep -u "$(id -u)" -x picom | head -n1)"
+    if [ -z "$pid" ]; then return 0; fi
+    mapfile -d '' -t args < "/proc/$pid/cmdline" 2>/dev/null
+    if [ "${#args[@]}" -eq 0 ]; then args=(picom -b --backend glx); fi
+    pkill -u "$(id -u)" -x picom 2>/dev/null
+    for i in $(seq 1 25); do                  # wait (max 5 s) until it is really gone
+        pgrep -u "$(id -u)" -x picom >/dev/null 2>&1 || break
+        sleep 0.2
+    done
+    "${args[@]}" >/dev/null 2>&1 &
+    return 0
+}
+
 fix_display() {
-    sleep 1                                   # give the GPU/driver a moment to come back
+    sleep 2                                   # give the GPU/driver time to come back
     xset dpms force on 2>/dev/null
-    if [ -x "$HOME/.fehbg" ]; then "$HOME/.fehbg" >/dev/null 2>&1; fi
-    pkill -USR1 -u "$(id -u)" -x picom 2>/dev/null
-    if command -v xrefresh >/dev/null 2>&1; then sleep 0.5; xrefresh 2>/dev/null; fi
+    if [ -x "$HOME/.fehbg" ]; then "$HOME/.fehbg" >/dev/null 2>&1; fi   # wallpaper first, picom reads it
+    restart_picom
+    if command -v xrefresh >/dev/null 2>&1; then sleep 1; xrefresh 2>/dev/null; fi
     return 0
 }
 
