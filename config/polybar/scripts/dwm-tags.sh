@@ -10,9 +10,9 @@ pb_color() {   # pb_color <key> <fallback>
     printf '%s' "${v:-$2}"
 }
 COLOR_ACTIVE="${DWM_TAG_ACTIVE_COLOR:-$(pb_color blue '#eceff4')}"        # accent
-COLOR_OCCUPIED="${DWM_TAG_OCCUPIED_COLOR:-$(pb_color fg '#d8dee9')}"      # fg
+COLOR_OCCUPIED="${DWM_TAG_OCCUPIED_COLOR:-$(pb_color tag-occupied "$(pb_color fg '#d8dee9')")}"   # between fg-alt and fg
 COLOR_URGENT="${DWM_TAG_URGENT_COLOR:-$(pb_color red '#bf616a')}"         # red
-COLOR_EMPTY="${DWM_TAG_EMPTY_COLOR:-$(pb_color fg-alt '#4c566a')}"        # fg-alt
+COLOR_EMPTY="${DWM_TAG_EMPTY_COLOR:-$(pb_color tag-empty "$(pb_color fg-alt '#4c566a')")}"       # between bg and fg-alt
 FONT_ACTIVE="${DWM_TAG_ACTIVE_FONT:-2}"              # Font index for active
 FONT_OCCUPIED="${DWM_TAG_OCCUPIED_FONT:-4}"          # Font index for occupied
 FONT_URGENT="${DWM_TAG_URGENT_FONT:-3}"              # Font index for urgent
