@@ -70,6 +70,17 @@ All three are optional: press <kbd>Enter</kbd> for yes, <kbd>n</kbd> for no. Not
 - **Bash prompt:** installs my customised bash prompt from [tudorioan1/mybash](https://github.com/tudorioan1/mybash) (cloned to `~/mybash`).
 - **Default web browser:** the installer scans the browsers installed on your system (native, Flatpak and Snap) and lets you pick one. It becomes the system default (`xdg-settings`) and the `browser` variable in `~/.config/dwm-tudor/hotkeys.toml`, which <kbd>SUPER</kbd> + <kbd>B</kbd> uses.
 
+
+## TODOs
+
+My roadmap for this setup.
+
+- [x] Repairing the openSUSE installer
+- [x] Making a lockscreen with PAM integration
+- [x] Improving the control center with more features
+- [x] Clean the code a little bit
+- [x] Picom blur
+
 ### Post-Install Setup
 
 **Option A — Display Manager** (SDDM, GDM, LightDM, etc.):
