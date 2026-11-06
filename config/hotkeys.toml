@@ -52,7 +52,7 @@
 [vars]
 terminal = "alacritty"
 webapp   = "webapp-launch"
-browser = "firefox"
+browser = "brave-origin"
 filebrowser = "thunar"
 
 # ── KEYBINDINGS ───────────────────────────────────────────────────────────────
