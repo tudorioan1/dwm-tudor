@@ -49,7 +49,7 @@ Debian/Ubuntu :
 ```bash
 git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./install-debian.sh && ./install-debian.sh
 ```
-## Beta installers (to be fixed, not recommended for now)
+## Beta installers (might break your system, not recommended, VERY UNSTABLE)
 openSUSE Tumbleweed :
 ```bash
 git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./install-opensuse.sh && ./install-opensuse.sh
@@ -75,7 +75,7 @@ All three are optional: press <kbd>Enter</kbd> for yes, <kbd>n</kbd> for no. Not
 
 My roadmap for this setup.
 
-- [x] Repairing the openSUSE installer
+- [x] Repairing the openSUSE installer (I don't have the necessary time to do that now, so the openSUSE installer is not coming soon...)
 - [x] Making a lockscreen with PAM integration
 - [x] Improving the control center with more features
 - [x] Clean the code a little bit
@@ -94,7 +94,7 @@ startx
 
 ---
 **The `.xinitrc` disables screen blanking/DPMS (prevents NVIDIA GPU issues on wake), launches Polybar, and starts dwm.
-For changing display resolution or refresh rate, use xrandr.**
+For changing display resolution or refresh rate, use xrandr and put the command (Eg. xrandr --output HDMI-1 --mode 1920x1080 --rate 144) in `~/.local/share/dwm-tudor/scripts/autostart.sh` or in your `.xprofile`.**
 
 **GTK theming:** the installer can set a GTK look for you (see above): **Materia-dark** theme, **Papirus-Dark** icons and the **Bibata-Modern-Ice** cursor. To change the GTK theme, icon theme, cursor theme and font manually, use **`nwg-look`** (installed by the installers) or **`lxappearance`** (install it from your distro's repositories). Launch either one from a terminal as a normal user, not as root. *Materia-dark* is the theme that works best with this setup.
 
@@ -149,7 +149,7 @@ make && sudo make install
 > **Note:** `config.def.h` is the clean default template. `config.h` is your personal customization. If `config.h` doesn't exist, `make` will create it from `config.def.h` automatically.
 
 Key things to customize in `config.h`:
-- **`refresh_rate`** — set to the highest refresh rate that your monitor supports, or use xrandr in the autostart script
+- **`refresh_rate`** — set to the highest refresh rate that your monitor supports, or use xrandr.
 - **`fonts[]`** — font family and size
 - **`autostart[]`** — programs launched on startup
 - **`MODKEY`** — modifier key (`Mod4Mask` = Super, `Mod1Mask` = Alt)
