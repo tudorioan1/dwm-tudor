@@ -1,5 +1,5 @@
 # ╔══════════════════════════════════════════════════════════════════════╗
-# ║              DWM Hotkeys Configuration  ·  hotkeys.toml             ║
+# ║              DWM Hotkeys Configuration  ·  hotkeys.toml              ║
 # ╠══════════════════════════════════════════════════════════════════════╣
 # ║  LIVE RELOAD — save this file and changes apply instantly!           ║
 # ║  Manual reload:  kill -USR1 $(pidof dwm)                             ║
@@ -52,7 +52,7 @@
 [vars]
 terminal = "alacritty"
 webapp   = "webapp-launch"
-browser = "brave-origin"
+browser = "firefox"
 filebrowser = "thunar"
 
 # ── KEYBINDINGS ───────────────────────────────────────────────────────────────
@@ -69,7 +69,7 @@ keys = [
   { mod="SUPER",            key="v",       desc="Start win11 vm",          func="spawn",       cmd="virsh -c qemu:///system start win11-passthrough 2>/dev/null || true; sleep 1; looking-glass-client -F" },
 
   # ── Web apps ─────────────────────────────────────────────────────────────────
-  { mod="SUPER",            key="b",       desc="Browser",                 func="spawn",       exec=["$browser"] },
+  { mod="SUPER",            key="b",       desc="Browser",                 func="spawn",       cmd="$browser" },
 
   # ── Screenshots ───────────────────────────────────────────────────────────────
   { mod="SUPER",            key="p",       desc="Screenshot (fullscreen)", func="spawn",       cmd="dwm-screenshot full" },
@@ -79,8 +79,7 @@ keys = [
   # ── Files & utilities ─────────────────────────────────────────────────────────
   { mod="SUPER",            key="e",       desc="File manager",            func="spawn",       exec=["$filebrowser"] },
   { mod="SUPER",            key="slash",   desc="Keybinds cheatsheet",     func="spawn",       cmd="dwm-keybinds" },
-  { mod="SUPER",            key="F1",      desc="dwm Control center",          func="spawn",       cmd="dwm-controlcenter" },
-  { mod="SUPER CTRL",       key="r",       desc="Restart Proton/Steam",    func="spawn",       cmd="protonrestart" },
+  { mod="SUPER",            key="F1",      desc="dwm Control center",      func="spawn",       cmd="dwm-controlcenter" },
 
   # ── Volume  (no modifier — press the media key directly) ─────────────────────
   { mod="",                 key="XF86AudioRaiseVolume",   desc="Volume up",     func="spawn",  cmd="amixer sset Master 5%+ unmute" },
