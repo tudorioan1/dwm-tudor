@@ -472,7 +472,7 @@ run_quick_actions() {
         *"Restart Picom"*)
             pkill picom 2>/dev/null || true
             sleep 0.3
-            picom -b &
+            picom --config ~/.config/picom/picom.conf -b 2>/dev/null &
             notify "Picom restarted"
             ;;
         *"Restart Dunst"*)

@@ -48,7 +48,7 @@ done
 feh --randomize --bg-fill ~/Pictures/backgrounds/* 2>/dev/null &
 
 # Compositor
-picom -b --backend glx 2>/dev/null &
+picom --config ~/.config/picom/picom.conf -b 2>/dev/null &
 
 # Notification daemon
 dunst 2>/dev/null &
@@ -77,6 +77,5 @@ done
 # dwm already starts polybar from setup() (spawnbar); only start it here if it is missing
 sleep 1 && pgrep -u "$(id -u)" -x polybar >/dev/null 2>&1 || "$HOME/.config/polybar/launch.sh" 2>/dev/null &
 flameshot &
-
+./.xprofile
 dex -a 2>/dev/null
-command -v setxkbmap >/dev/null 2>&1 && setxkbmap -layout us,ro -variant ,std -option grp:alt_shift_toggle
