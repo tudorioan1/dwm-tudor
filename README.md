@@ -36,7 +36,12 @@ A functional, minimalist and super fast desktop experience built on the original
 > **Important** : If you install my configuration of dwm on a system where other dotfiles were installed, existing files may be overwritten (including `~/.xinitrc`, `~/.config/dwm-tudor/` and the Polybar, rofi and dunst configs). Back them up first.
 
 Run the installer as a **normal user, not as root** (it calls `sudo` when needed).
+> **Choose what distro you have installed and run the command below.**
 
+Debian/Ubuntu :
+```bash
+git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./install-debian.sh && ./install-debian.sh
+```
 Arch :
 ```bash
 git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./install-arch.sh && ./install-arch.sh
@@ -45,10 +50,7 @@ Fedora :
 ```bash
 git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./install-fedora.sh && ./install-fedora.sh
 ```
-Debian/Ubuntu :
-```bash
-git clone https://github.com/tudorioan1/dwm-tudor && cd dwm-tudor && chmod +x ./install-debian.sh && ./install-debian.sh
-```
+
 ## Beta installers (might break your system, not recommended, VERY UNSTABLE)
 openSUSE Tumbleweed :
 ```bash
