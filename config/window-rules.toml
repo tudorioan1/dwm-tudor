@@ -1,5 +1,5 @@
 # ╔══════════════════════════════════════════════════════════════════════╗
-# ║           DWM Window Rules Configuration  ·  window-rules.toml      ║
+# ║           DWM Window Rules Configuration  ·  window-rules.toml       ║
 # ╠══════════════════════════════════════════════════════════════════════╣
 # ║  LIVE RELOAD — save this file and changes apply instantly!           ║
 # ║  Manual reload:  kill -USR1 $(pidof dwm)                             ║
