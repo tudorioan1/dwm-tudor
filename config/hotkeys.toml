@@ -82,9 +82,9 @@ keys = [
   { mod="SUPER",            key="F1",      desc="dwm Control center",      func="spawn",       cmd="dwm-controlcenter" },
 
   # ── Volume  (no modifier — press the media key directly) ─────────────────────
-  { mod="",                 key="XF86AudioRaiseVolume",   desc="Volume up",     func="spawn",  cmd="amixer sset Master 5%+ unmute" },
-  { mod="",                 key="XF86AudioLowerVolume",   desc="Volume down",   func="spawn",  cmd="amixer sset Master 5%- unmute" },
-  { mod="",                 key="XF86AudioMute",          desc="Mute toggle",   func="spawn",  cmd="amixer sset Master toggle" },
+  { mod="",                 key="XF86AudioRaiseVolume",   desc="Volume up",     func="spawn",  cmd="~/.local/share/dwm-tudor/scripts/changevolume up" },
+  { mod="",                 key="XF86AudioLowerVolume",   desc="Volume down",   func="spawn",  cmd="~/.local/share/dwm-tudor/scripts/changevolume down" },
+  { mod="",                 key="XF86AudioMute",          desc="Mute toggle",   func="spawn",  cmd="~/.local/share/dwm-tudor/scripts/changevolume mute" },
 
   # ── Brightness ────────────────────────────────────────────────────────────────
   { mod="",                 key="XF86MonBrightnessUp",    desc="Brightness +",  func="spawn",  cmd="xbacklight -inc 10" },
