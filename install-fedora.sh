@@ -113,7 +113,7 @@ ok "Build dependencies installed."
 
 # ── Runtime dependencies ─────────────────────────────────
 info "Installing runtime dependencies..."
-if install_packages rofi picom dunst feh flameshot papirus-icon-theme dex-autostart mate-polkit alsa-utils git curl unzip xz xclip \
+if install_packages rofi picom dunst feh flameshot papirus-icon-theme pamixer dex-autostart mate-polkit alsa-utils git curl unzip xz xclip \
     xprop thunar gvfs tumbler thunar-archive-plugin xdg-user-dirs \
     xdg-desktop-portal-gtk pipewire pavucontrol gnome-keyring NetworkManager network-manager-applet \
     libnotify rsync xdotool setxkbmap
