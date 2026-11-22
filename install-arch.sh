@@ -43,7 +43,7 @@ ok "Build dependencies installed."
 
 # ── Runtime dependencies ─────────────────────────────────
 info "Installing runtime dependencies..."
-install_packages rofi picom dunst feh quickshell papirus-icon-theme flameshot dex mate-polkit alsa-utils git unzip xclip \
+install_packages rofi picom dunst feh quickshell papirus-icon-theme flameshot pamixer dex mate-polkit alsa-utils git unzip xclip \
     xorg-xprop xdotool xorg-setxkbmap thunar gvfs tumbler thunar-archive-plugin nwg-look xdg-user-dirs \
     xdg-desktop-portal-gtk pipewire pavucontrol gnome-keyring networkmanager network-manager-applet \
     libnotify rsync
