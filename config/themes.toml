@@ -18,10 +18,11 @@
 # BORDER SIZE
 # ───────────
 #   borderpx = 0   → no borders (minimal look)
-#   borderpx = 1   → thin, clean borders (default)
+#   borderpx = 1   → thin, clean borders
 #   borderpx = 2   → thicker borders, easier to see
 #   borderpx = 3   → bold borders
-
+#   borderpx = 4   → very bold borders
+#   borderpx = 5   → extremly bord borders (default)
 
 # ══════════════════════════════════════════════════════════════════════════════
 # ACTIVE THEME  ←  only change this
