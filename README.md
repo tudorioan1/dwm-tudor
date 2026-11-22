@@ -169,6 +169,8 @@ Changing the theme updates dwm, Polybar, rofi and the terminal. The default them
 
 Every theme has its own rofi theme (`rofi-monochrome`, `rofi-nord`, `rofi-tokyonight`, ...): the same drop-down launcher, in the colors of the active theme. It is chosen by the `rofi_theme` key of each theme in `themes.toml`. The older `sidetab-*` layouts are still included; to use one, set `rofi_theme` to its name (for example `sidetab-nord`).
 
+If you want to change the wallpaper, do it from clicking the little image icon on the top bar and if you want to add more wallpapers, put them in `~/Pictures/backgrounds`.
+
 ## Troubleshooting
 
 - **Check dependencies:** Control Center → *Quick Actions* → *Run Dependency Check*, or run `scripts/check-deps.sh`. *System Health* in the Control Center does the same check live and can launch the right installer for your distro.
