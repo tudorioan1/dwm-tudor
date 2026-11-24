@@ -501,7 +501,8 @@ run_quick_actions() {
                 pkill picom 2>/dev/null || true
                 notify "Compositor stopped"
             else
-                picom -b &
+                sleep 0.3
+                picom --config ~/.config/picom/picom.conf -b 2>/dev/null &
                 notify "Compositor started"
             fi
             ;;
