@@ -30,6 +30,7 @@ A functional, minimalist and super fast desktop experience built on the original
 - **Live theming** — 15 themes that restyle dwm, Polybar, rofi and the terminal at once
 - **Control Center** — rofi-based menu (<kbd>SUPER</kbd> + <kbd>F1</kbd>) for themes, system health and quick actions
 - **Wallpaper picker** — Quickshell grid opened from Polybar; it follows the colors of the active theme (black if none is found)
+- **Window animations** — using picom, less than 100 MB of RAM used in the background
 
 ## Installation
 
