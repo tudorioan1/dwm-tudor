@@ -32,7 +32,7 @@
 theme = "monochrome"   # ← change only this line to switch themes
 
 [appearance]
-borderpx = 5   # border size in pixels (0 = none, 1-5 = recommended)
+borderpx = 3   # border size in pixels (0 = none, 1-5 = recommended)
 
 
 # ══════════════════════════════════════════════════════════════════════════════
