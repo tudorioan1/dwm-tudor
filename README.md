@@ -1,15 +1,21 @@
+
 <div align="center">
   <img src="./dwm.png" alt="dwm-logo" width="185" height="230"/>
+  
 
   # **dwm - dynamic window manager**
   ### dwm is an extremely ***fast***, ***small***, and ***dynamic*** window manager for X.
+  
+![DWM Version](https://img.shields.io/badge/DWM-6.8-005577?style=for-the-badge&logo=c&logoColor=white)
+[![Last Commit](https://img.shields.io/github/last-commit/tudorioan1/dwm-tudor?style=for-the-badge&logo=github)](https://github.com/tudorioan1/dwm-tudor/commits)
+![Made for Debian Arch Fedora](https://img.shields.io/badge/Made%20for-Debian%20%7C%20Arch%20%7C%20Fedora-1793D1?style=for-the-badge&logo=linux&logoColor=white)
 
 </div>
 
 ---
 > **Note:** This is a personal project and still a work in progress. It is built around my own workflow and assumes some familiarity with Linux and window managers, so a little troubleshooting after installing is to be expected.
 
-![DWM Version](https://img.shields.io/badge/DWM-6.8-005577?style=flat-square&logo=c&logoColor=white)
+
 
 A functional, minimalist and super fast desktop experience built on the original Suckless DWM, that was heavily modified for my needs. It includes numerous patches and customizations for a productive workflow on **Arch Linux, Fedora and Debian/Ubuntu** with X11 (Wayland is not supported).
 <img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/9d1d8d46-f80c-43b3-ae1f-2038b4b69952" />
