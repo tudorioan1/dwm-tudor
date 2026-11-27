@@ -77,5 +77,4 @@ done
 # dwm already starts polybar from setup() (spawnbar); only start it here if it is missing
 sleep 1 && pgrep -u "$(id -u)" -x polybar >/dev/null 2>&1 || "$HOME/.config/polybar/launch.sh" 2>/dev/null &
 flameshot &
-./.xprofile
 dex -a 2>/dev/null
