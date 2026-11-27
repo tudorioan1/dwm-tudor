@@ -72,6 +72,9 @@
 #define HEIGHT(X)               ((X)->h + 2 * (X)->bw)
 #define TAGMASK                 ((1 << LENGTH(tags)) - 1)
 #define TAGSLENGTH              (LENGTH(tags))
+#define SINGLE_WINDOW_GAP       4
+#define TILE_SIDE_GAP           4
+#define TILE_COLUMN_GAP         4
 #define TEXTW(X)                (drw_fontset_getwidth(drw, (X)) + lrpad)
 
 /* enums */
@@ -3219,7 +3222,7 @@ setup(void)
 	Atom utf8string;
 	/* clean up any zombies immediately */
 	sigchld(0);
-	dyn_borderpx = 1; /* initial value; overridden by themes.toml on load */
+	dyn_borderpx = 3; /* default value; overridden by themes.toml on load */
 
 	/* the one line of bloat that would have saved a lot of time for a lot of people */
 	putenv("_JAVA_AWT_WM_NONREPARENTING=1");
@@ -3571,20 +3574,38 @@ tile(Monitor *m)
 	int mrest, srest;
 	Client *c;
 
+	/* Count only tiled clients. Floating/transient dialogs (for example,
+	 * Thunar's "New Folder" name prompt) must not disable the outer gap. */
 	for (n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
 
 	if (n == 0)
 		return;
 
-	sx = mx = m->wx;
+	/* Keep a subtle outer gap when there is exactly one visible tiled window.
+	 * Fullscreen clients are floating and are never given an outer gap. */
+	if (n == 1) {
+		c = nexttiled(m->clients);
+		if (c && !c->isfullscreen) {
+			resize(c, m->wx + SINGLE_WINDOW_GAP, m->wy + SINGLE_WINDOW_GAP,
+			       m->ww - (2 * SINGLE_WINDOW_GAP) - (2 * c->bw),
+			       m->wh - (2 * SINGLE_WINDOW_GAP) - (2 * c->bw), 0);
+			return;
+		}
+	}
+
+	/* Keep 4px side breathing room on multi-window layouts, and a small
+	 * horizontal gap between the master and stack columns. Vertical spacing
+	 * is intentionally unchanged. */
+	sx = mx = m->wx + TILE_SIDE_GAP;
 	sy = my = m->wy;
 	sh = mh = m->wh;
-	sw = mw = m->ww;
+	sw = mw = MAX(1, m->ww - (2 * TILE_SIDE_GAP));
 
 	if (m->nmaster && n > m->nmaster) {
-		sw = mw * (1 - m->mfact);
-		mw = mw * m->mfact;
-		sx = mx + mw;
+		int usablew = MAX(1, mw - TILE_COLUMN_GAP);
+		mw = usablew * m->mfact;
+		sw = usablew - mw;
+		sx = mx + mw + TILE_COLUMN_GAP;
 	}
 
 	getfacts(m, mh, sh, &mfacts, &sfacts, &mrest, &srest);
