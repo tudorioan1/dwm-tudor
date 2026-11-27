@@ -18,7 +18,9 @@
 
 
 A functional, minimalist and super fast desktop experience built on the original Suckless DWM, that was heavily modified for my needs. It includes numerous patches and customizations for a productive workflow on **Arch Linux, Fedora and Debian/Ubuntu** with X11 (Wayland is not supported).
-<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/9d1d8d46-f80c-43b3-ae1f-2038b4b69952" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/3a160f7c-8db0-4bb4-9720-50704e98e042" />
+
+
 
 
 ## Patches & Features
