@@ -18,6 +18,7 @@ FONT_OCCUPIED="${DWM_TAG_OCCUPIED_FONT:-4}"          # Font index for occupied
 FONT_URGENT="${DWM_TAG_URGENT_FONT:-3}"              # Font index for urgent
 FONT_EMPTY="${DWM_TAG_EMPTY_FONT:-1}"                # Font index for empty (normal weight)
 NUM_TAGS="${DWM_TAG_COUNT:-9}"                       # Always show this many tags
+ROMAN_TAGS=(I II III IV V VI VII VIII IX)             # Roman labels for DWM tags 1..9
 
 # Function to generate and output the tag display
 update_tags() {
@@ -54,18 +55,19 @@ fi
     output=""
     for ((i=0; i<NUM_TAGS; i++)); do
         tag=$((i + 1))
+        roman_tag="${ROMAN_TAGS[$i]:-$tag}"
         if [ "$i" = "$current" ]; then
             # Active tag (currently selected)
-            output+="%{F${COLOR_ACTIVE}}%{T${FONT_ACTIVE}}$tag%{T-}%{F-} "
+            output+="%{F${COLOR_ACTIVE}}%{T${FONT_ACTIVE}}$roman_tag%{T-}%{F-} "
         elif [ "${urgent_tags[$i]}" = "1" ]; then
             # Urgent tag (has urgent window)
-            output+="%{F${COLOR_URGENT}}%{T${FONT_URGENT}}$tag%{T-}%{F-} "
+            output+="%{F${COLOR_URGENT}}%{T${FONT_URGENT}}$roman_tag%{T-}%{F-} "
         elif [ "${occupied_tags[$i]}" = "1" ]; then
             # Occupied tag (has windows)
-            output+="%{F${COLOR_OCCUPIED}}%{T${FONT_OCCUPIED}}$tag%{T-}%{F-} "
+            output+="%{F${COLOR_OCCUPIED}}%{T${FONT_OCCUPIED}}$roman_tag%{T-}%{F-} "
         else
             # Empty tag (no windows, still shown but dimmed)
-            output+="%{F${COLOR_EMPTY}}%{T${FONT_EMPTY}}$tag%{T-}%{F-} "
+            output+="%{F${COLOR_EMPTY}}%{T${FONT_EMPTY}}$roman_tag%{T-}%{F-} "
         fi
     done
 
