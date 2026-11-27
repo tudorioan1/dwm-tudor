@@ -14,7 +14,7 @@ title = "Alacritty"
 decorations = "Full"
 startup_mode ="Maximized"
 blur = true
-opacity = 0.96
+opacity = 0.98
 padding.x = 10
 padding.y = 10
 
